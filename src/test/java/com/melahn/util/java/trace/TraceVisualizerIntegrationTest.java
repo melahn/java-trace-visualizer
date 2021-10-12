@@ -33,7 +33,7 @@ class TraceVisualizerIntegrationTest {
 
 
      /**
-     * Performs Integration Test setup by cleaning, then recreating the test directory.
+     * Performs Integration Test setup by cleaning, then recreating, the test directory.
      */
     @BeforeAll
     static void setUp() {
