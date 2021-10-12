@@ -1,6 +1,6 @@
 # java-trace-visualizer
 
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=melahn_java-trace-visualizer)](https://sonarcloud.io/dashboard?id=melahn_test-environment)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=melahn_java-trace-visualizer)](https://sonarcloud.io/dashboard?id=melahn_java-trace-visualizer)
 
 ## Overview
 
