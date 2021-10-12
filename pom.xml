@@ -58,6 +58,17 @@
         </plugins>
     </reporting>
     <build>
+        <resources>
+            <resource>
+              <!--used to extract the project version to derive the name of the shaded jar for integration-tests-->
+              <directory>src/main/resources/resources-filtered</directory>
+              <filtering>true</filtering>
+            </resource>
+            <resource>
+              <directory>src/main/resources</directory>
+              <filtering>false</filtering>
+            </resource>
+          </resources>
         <plugins>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
@@ -219,7 +230,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
-                                        <Main-Class>com.melahn.util.trace.TraceVisualizer</Main-Class>
+                                        <Main-Class>com.melahn.util.java.trace.TraceVisualizer</Main-Class>
                                         <Build-Number>${buildNumber}</Build-Number>
                                         <Multi-Release>true</Multi-Release>
                                     </manifestEntries>
