@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -129,6 +131,19 @@ public class TraceVisualizerTestUtil {
         final int waitTime = 20;
         process.waitFor(waitTime, TimeUnit.SECONDS);
         return process.exitValue();
+    }
+
+    /**
+     * Returns a randomly generated string. 
+     * 
+     * @param c the number of characters in the string you want. If
+     *          invalid (less than or equal to 0) 10 is used
+     * @return the generated String
+     */
+    public static String generateRandomString(int c) {
+        byte[] array = new byte[c <= 0 ? 10 : c];
+        new Random().nextBytes(array);
+        return new String(array, Charset.forName("UTF-8"));
     }
 
     /**
