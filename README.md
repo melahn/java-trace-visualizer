@@ -7,13 +7,9 @@
 
 A  project to make jdb trace output easier to understand.
 
-Note: At the moment, this is a skeleton to setup automated build and test.
-
 ## Prerequisites
 
 Java 8 or later.  
-
-[Graphviz](https://www.graphviz.org/) is also a prerequisite only if you are generating images from the PlantUML file using the '-g' option described below.
 
 ## Goals
 
@@ -27,10 +23,10 @@ Java 8 or later.
 java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar
 
 Flags:
-  -i  <filename>  A location in the file system for the input file 
-  -o  <filename>  A location in the file system for the visualization file to be produced
-  -g      Generate image from the PlantUML file
-  -h      Help               
+  -i  <filename>  The name of the input file 
+  -o  <filename>  The name of output file
+  -g              Generate image from the PlantUML file
+  -h              Help               
 ```
 
 #### Flags
@@ -49,8 +45,38 @@ Flags:
 
 #### Example Commands
 
-##### Generating a Trace Visualization as a PlantUML file with image generated from the PlantUML file
+##### Generating a Trace Visualization as an ascii text file
 
 ``` java
-java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.puml  -g
+java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.txt 
+```
+
+### Example Text File Output
+
+``` text
+ thread: main 
+     
+       start 
+         |
+         |____ com.melahn.util.java.trace.TestApp.A() (line 13) 
+         |    |
+         |    |____ com.melahn.util.java.trace.TestApp.B() (line 18) 
+         |
+         |____ com.melahn.util.java.trace.TestApp.C() (line 21) 
+         |    |
+         |    |____ com.melahn.util.java.trace.TestApp.D() (line 26) 
+         |
+         |____ com.melahn.util.java.trace.TestApp.E() (line 29) 
+         |    |
+         |    |____ com.melahn.util.java.trace.TestApp.F() (line 34) 
+         |         |
+         |         |____ com.melahn.util.java.trace.TestApp.G() (line 38) 
+         |              |
+         |              |____ com.melahn.util.java.trace.TestApp.H() (line 43) 
+         |
+         |____ com.melahn.util.java.trace.TestApp.I() (line 47) 
+         |
+         |____ com.melahn.util.java.trace.TestApp.B() (line 18) 
+
+Generated on 2021/10/25 16:23:57 by com.melahn.util.java.trace.TraceVisualizerTextPrinter (https://github.com/melahn/java-trace-visualizer)
 ```

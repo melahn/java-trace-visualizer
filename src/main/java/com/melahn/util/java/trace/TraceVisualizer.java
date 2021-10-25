@@ -9,28 +9,32 @@ import org.apache.logging.log4j.LogManager;
 
 public class TraceVisualizer {
 
-    private static boolean generateImage = false;
+    protected static boolean generateImage = false;
     protected static String inputFilename = null;
-    private static String outputFilename = null;
+    protected static Logger logger = LogManager.getLogger();
+    protected static String outputFilename = null;
 
-    public static void main (String[] a) {
+    public static void main(String[] a) {
         Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
         try {
-            parseArgs(a);
-        }
-        catch (TraceVisualizerException e) {
+            if (parseArgs(a)) {
+                TraceVisualizerPrinter t = inputFilename.endsWith(".puml") ? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, null)
+                        : new TraceVisualizerTextPrinter(inputFilename, outputFilename, null);
+                t.processRawTraceFile();
+            }
+        } catch (TraceVisualizerException e) {
             logger.error("A TraceVisualizerException occured: ".concat(e.getLocalizedMessage()));
         }
     }
+
     /**
      * Gets Help.
      */
     public static String getHelp() {
         return "\nUsage:\n\n".concat("java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar\n").concat("\nFlags:\n")
-                .concat("\t-i\t<filename>\tThe trace file created from jdb\n")
-                .concat("\t-o\t<filename>\tThe visualization created by this program\n")
-                .concat("\t-g\t\t\tGenerate image from PlantUML file\n")
-                .concat("\t-h\t\t\tHelp for this program\n")
+                .concat("\t-i\t<filename>\tThe input file (a trace file created from jdb)\n")
+                .concat("\t-o\t<filename>\tThe output file (a visualization file created by this program)\n")
+                .concat("\t-g\t\t\tGenerate image from PlantUML file\n").concat("\t-h\t\t\tHelp for this program\n")
                 .concat("\nSee https://github.com/melahn/java-trace-visualizer for more information\n");
     }
 
@@ -42,13 +46,13 @@ public class TraceVisualizer {
      * @throws TraceVisualizerException should a parse error occur
      */
     protected static boolean parseArgs(String[] a) throws TraceVisualizerException {
-        Options o = setOptions();  
+        Options o = setOptions();
         try {
             CommandLine c = new DefaultParser().parse(o, a);
             int i = parseOptions(c);
             parseSwitches(c);
             if (a.length == 0 || c.hasOption("h")) {
-                LogManager.getLogger().info(TraceVisualizer.getHelp());
+                logger.info(TraceVisualizer.getHelp());
                 return false;
             }
             if (i != 2) {
@@ -56,7 +60,7 @@ public class TraceVisualizer {
             }
             return true;
         } catch (ParseException e) {
-            LogManager.getLogger().error(e.getMessage());
+            logger.error(e.getMessage());
             throw new TraceVisualizerException(String.format("Parse Exception: %s", e.getMessage()));
         }
     }
@@ -68,9 +72,9 @@ public class TraceVisualizer {
      * @return a count of the options found
      */
     private static int parseOptions(CommandLine c) {
-        int i = 0; 
-        if (c.hasOption("i")) { 
-            setInputFilename(c.getOptionValue("f"));
+        int i = 0;
+        if (c.hasOption("i")) {
+            setInputFilename(c.getOptionValue("i"));
             i++;
         }
         if (c.hasOption("o")) {
@@ -112,18 +116,23 @@ public class TraceVisualizer {
     public static void setGenerateImage(boolean b) {
         generateImage = b;
     }
+
     public static boolean getGenerateImage() {
         return generateImage;
     }
+
     public static void setInputFilename(String f) {
         inputFilename = f;
     }
+
     public static String getInputFilename() {
         return inputFilename;
     }
+
     public static void setOutputFilename(String f) {
         outputFilename = f;
     }
+
     public static String getOutputFilename() {
         return outputFilename;
     }

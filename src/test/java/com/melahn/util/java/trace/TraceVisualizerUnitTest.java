@@ -77,7 +77,7 @@ class TraceVisualizerUnitTest {
             System.setOut(INITIALOUT);
         }
         // both options are correctly specified with -g
-        assertDoesNotThrow(()->TraceVisualizer.main(new String[]{"-i", "input-file", "-o", "output-file", "-g"}));
+        assertDoesNotThrow(()->TraceVisualizer.main(new String[]{"-i", "./src/test/resource/example-trace-file.txt", "-o", "output-file", "-g"}));
         assertEquals(true, TraceVisualizer.getGenerateImage());
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
