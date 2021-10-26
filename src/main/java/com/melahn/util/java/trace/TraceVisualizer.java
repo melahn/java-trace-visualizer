@@ -29,6 +29,7 @@ public class TraceVisualizer {
                             : new TraceVisualizerTextPrinter(inputFilename, outputFilename, statsFilename, null);
                 }
                 t.processRawTraceFile();
+                t.printTraceStats();
             }
         } catch (TraceVisualizerException e) {
             logger.error("A TraceVisualizerException occured: ".concat(e.getLocalizedMessage()));

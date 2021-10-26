@@ -3,6 +3,7 @@ package com.melahn.util.java.trace;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,6 +47,11 @@ class TraceVisualizerUnitTest {
         UnitTestTracePrinter(String r, String v, String t) throws TraceVisualizerException {
             super(r, v, t);
         }
+
+        UnitTestTracePrinter() {
+            super();
+        }
+
         public void printHeader() throws TraceVisualizerException {super.printHeader();}
 
         public void printFooter() throws TraceVisualizerException {super.printFooter();}
@@ -136,13 +142,22 @@ class TraceVisualizerUnitTest {
     }
 
     @Test 
-    void TraceVisualizeBasePrinterTest() throws TraceVisualizerException {
-        UnitTestTracePrinter uttp = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
-        assertDoesNotThrow(()->uttp.printHeader());
-        assertDoesNotThrow(()->uttp.printFooter());
+    void TraceVisualizeBasePrinterTest() throws IOException, TraceVisualizerException {
+        UnitTestTracePrinter uttp1 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+        assertDoesNotThrow(()->uttp1.printHeader());
+        assertDoesNotThrow(()->uttp1.printFooter());
         TraceNode t = new TraceNode(0, "foo", "0", 1, null);
-        assertDoesNotThrow(()->uttp.printVisualizedTraceNode(t));
-        assertDoesNotThrow(()->uttp.processRawTraceFile());
+        assertDoesNotThrow(()->uttp1.printVisualizedTraceNode(t));
+        assertDoesNotThrow(()->uttp1.processRawTraceFile());
+        uttp1.setTraceThreadName(null);
+        assertEquals(TraceVisualizerBasePrinter.DEFAULT_THREAD_NAME, uttp1.getTraceThreadName());
+        uttp1.setTraceThreadName("foo");
+        assertEquals("foo", uttp1.getTraceThreadName());
+        UnitTestTracePrinter uttp2 = new UnitTestTracePrinter();
+        assertNotNull(uttp2);
+        UnitTestTracePrinter uttp3 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
+        uttp3.processRawTraceFile();
+        assertTrue(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 

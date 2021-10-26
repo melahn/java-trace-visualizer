@@ -24,7 +24,7 @@ public abstract class TraceVisualizerBasePrinter {
     String traceThreadName = null;
     BufferedWriter visualizedTraceFileWriter = null;
     static final int INDENT_INCREMENT = 5;
-    static final String DEFAULT_THREAD_NAME = "main";
+    public static final String DEFAULT_THREAD_NAME = "main";
 
     /**
      * Constructor that accepts the trace file name, the visualised trace file name,
@@ -63,7 +63,7 @@ public abstract class TraceVisualizerBasePrinter {
      */
     TraceVisualizerBasePrinter() {
         setLogger(LogManager.getLogger());
-        logger.debug("TraceVisualizerBasePrinter created");
+        logger.info("TraceVisualizerBasePrinter created");
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class TraceVisualizerBasePrinter {
         try {
             if (traceStatsFileWriter != null) {
                 traceStatsFileWriter.close();
-                logger.debug("Text Stats Printed");
+                logger.debug("Trace Stats Printed");
             }
         } catch (IOException e) {
             throw new TraceVisualizerException(e.getMessage());
@@ -182,6 +182,13 @@ public abstract class TraceVisualizerBasePrinter {
      */
     public void setTraceThreadName(String t) {
         traceThreadName = t == null ? DEFAULT_THREAD_NAME : t;
+    }
+
+    /**
+     * Get the name of the thread.
+     */
+    public String getTraceThreadName() {
+        return traceThreadName;
     }
 
     /**
