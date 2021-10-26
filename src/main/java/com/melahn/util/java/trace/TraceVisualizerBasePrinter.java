@@ -101,7 +101,7 @@ public abstract class TraceVisualizerBasePrinter {
             }
             printVisualizedTraceFile();
         } catch (IOException e) {
-            throw new TraceVisualizerException("IO Exception: ".concat(e.getLocalizedMessage()));
+            throw new TraceVisualizerException("IO Exception reading trace file");
         }
     }
 

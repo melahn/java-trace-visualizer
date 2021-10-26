@@ -10,8 +10,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -62,6 +64,8 @@ class TraceVisualizerUnitTest {
     private static final String EXPECTED = TraceVisualizerTestUtil.generateRandomString(10);
     private static final PrintStream INITIAL_OUT = System.out;
     private static final String EXAMPLE_JDB_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.jdb.out.txt";
+    private static final String TEST_READ_FILENAME = "./target/test-read.txt";
+    private static final Path TEST_READ_PATH = Paths.get(TEST_READ_FILENAME);
     private static final String TEST_PUML_OUT_FILENAME = "./target/example-single-thread-trace-file.puml";
     private static final String TEST_STATS_OUT_FILENAME = "./target/example-single-thread-trace-file-stats.txt";
     private static final String TEST_TEXT_OUT_FILENAME = "./target/example-single-thread-trace-file.txt";
@@ -111,10 +115,17 @@ class TraceVisualizerUnitTest {
 
     @Test
     void IOExceptionsTest() throws IOException, TraceVisualizerException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter("./target/foo.txt"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("./target/foowrite.txt"));
         BufferedWriter sbw = spy(bw);
-        // the spy throws an IO Exception when asked to write any string 
+        // this spy throws an IO Exception when asked to write any string 
         doThrow(IOException.class).when(sbw).write(anyString());
+        if (!Files.exists(TEST_READ_PATH)) {
+            Files.createFile(TEST_READ_PATH);
+        }
+        BufferedReader br = new BufferedReader(new FileReader(TEST_READ_FILENAME));
+        BufferedReader sbr = spy(br);
+        // this spy throws an IO Exception when asked to read 
+        doThrow(IOException.class).when(sbr).readLine();
         try (MockedStatic<Files> mf = org.mockito.Mockito.mockStatic(Files.class)) {
             mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw);
             TraceVisualizerTextPrinter tvtp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
@@ -128,6 +139,9 @@ class TraceVisualizerUnitTest {
             assertThrows(TraceVisualizerException.class, () -> tvpp.printHeader());
             assertThrows(TraceVisualizerException.class, () -> tvpp.printFooter());
             assertThrows(TraceVisualizerException.class, () -> tvpp.printVisualizedTraceNode(t));
+            mf.when(() -> Files.newBufferedReader(any(Path.class))).thenReturn(sbr);
+            UnitTestTracePrinter uttp = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
+            assertThrows(TraceVisualizerException.class, () -> uttp.processRawTraceFile());
         }
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
