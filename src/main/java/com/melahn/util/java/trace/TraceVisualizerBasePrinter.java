@@ -157,8 +157,7 @@ public abstract class TraceVisualizerBasePrinter {
      */
     public void setTraceStatsFile(String s) throws TraceVisualizerException {
         try {
-            traceStatsFileWriter = Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE_NEW);
+            traceStatsFileWriter = Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new TraceVisualizerException("Error creating Stats Trace File ".concat(s));
         }
@@ -271,5 +270,18 @@ public abstract class TraceVisualizerBasePrinter {
     protected void setLogger(Logger l) {
         logger = l;
         logger.debug("logger set to {} ", l);
+    }
+
+    /**
+     * Get a new Buffered Writer. Allows insertion of test for testing exception
+     * handling.
+     * 
+     * @param s the name of the file to write
+     * @return a new BufferedWriter
+     * @throws IOException
+     */
+    protected BufferedWriter getBufferedWriter(String s) throws IOException {
+        return Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE_NEW);
     }
 }

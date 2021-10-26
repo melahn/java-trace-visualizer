@@ -2,29 +2,50 @@ package com.melahn.util.java.trace;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.spy;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.melahn.util.test.TraceVisualizerTestUtil;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
+import com.melahn.util.test.TraceVisualizerTestUtil;
 class TraceVisualizerUnitTest {
  
+    Logger logger = LogManager.getLogger();
     private static final String DIVIDER = "-------------------------------------";
     private static final String EXPECTED = TraceVisualizerTestUtil.generateRandomString(10);
     private static final PrintStream INITIAL_OUT = System.out;
     private static final String EXAMPLE_JDB_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.jdb.out.txt";
     private static final String EXAMPLE_TEXT_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.txt";
     private static final String TEST_PUML_OUT_FILENAME = "./target/example-single-thread-trace-file.puml";
+    private static final String TEST_STATS_OUT_FILENAME = "./target/example-single-thread-trace-file-stats.txt";
     private static final String TEST_TEXT_OUT_FILENAME = "./target/example-single-thread-trace-file.txt";
     private static final Path TEST_OUT_PATH = Paths.get("./target/test/out");
 
@@ -45,19 +66,56 @@ class TraceVisualizerUnitTest {
     @Test
     void normalTest() {
         TraceVisualizer t = new TraceVisualizer();
-        assertEquals("com.melahn.util.java.trace.TraceVisualizer", t.getClass().getName());
         // no parameters
         assertDoesNotThrow(()->TraceVisualizer.main(new String[0]));
         // generate a visualized text trace using the example jdb out
         String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a1));
         assertTrue(Files.exists(Paths.get(TEST_TEXT_OUT_FILENAME)));
-        // generate a visualized text trace using the example jdb out
+        // generate a visualized puml trace using the example jdb out
         String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a2));
         assertTrue(Files.exists(Paths.get(TEST_PUML_OUT_FILENAME)));
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
+
+    @Test
+    void statsTest() {
+        TraceVisualizer t = new TraceVisualizer();
+        // generate a visualized stats file using a text trace using the example jdb out
+        String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
+        assertDoesNotThrow(()->TraceVisualizer.main(a1));
+        assertTrue(Files.exists(Paths.get(TEST_TEXT_OUT_FILENAME)));
+        // change this to true after stats code written
+        assertFalse(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
+        // generate a visualized stats file using a puml trace using the example jdb out
+        String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
+        assertDoesNotThrow(()->TraceVisualizer.main(a2));
+        assertTrue(Files.exists(Paths.get(TEST_PUML_OUT_FILENAME)));
+        // change this to true after stats code written
+        assertFalse(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
+        System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
+    }
+
+    @Test
+    void IOExceptionsTest() throws IOException, TraceVisualizerException {
+        BufferedWriter bw = new BufferedWriter(new FileWriter("./target/foo.txt"));
+        BufferedWriter sbw = spy(bw);
+        // the spy throws an IO Exception when asked to write any string 
+        doThrow(IOException.class).when(sbw).write(anyString());
+        try (MockedStatic<Files> mf = org.mockito.Mockito.mockStatic(Files.class)) {
+            mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw);
+            TraceVisualizerTextPrinter tvbp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+            tvbp.setLogger(logger);
+            assertThrows(TraceVisualizerException.class, () -> tvbp.printHeader());
+            assertThrows(TraceVisualizerException.class, () -> tvbp.printFooter());
+            TraceNode t = new TraceNode(0, "foo", "0", 1, null);
+            assertThrows(TraceVisualizerException.class, () -> tvbp.printVisualizedTraceNode(t));
+            assertThrows(TraceVisualizerException.class, () -> tvbp.printVertices(t));
+        }
+        System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
+    }
+
 
     @Test
     void helpTest() throws IOException {

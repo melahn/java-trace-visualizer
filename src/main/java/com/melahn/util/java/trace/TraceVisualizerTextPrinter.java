@@ -72,7 +72,7 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
             if (n.depth != 1) {
                 visualizedTraceFileWriter.write("____");
             } else {
-                visualizedTraceFileWriter.write("  "); // the root mode is treated a little differently
+                visualizedTraceFileWriter.write("  "); // the root node is treated a little differently
             }
             if (n.id != 0) {
                 visualizedTraceFileWriter.write(String.format("%s (line %s) %n", n.methodName, n.lineNumber));
