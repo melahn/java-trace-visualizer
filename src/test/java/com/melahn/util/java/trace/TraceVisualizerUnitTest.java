@@ -85,13 +85,11 @@ class TraceVisualizerUnitTest {
         // generate a visualized stats file using a text trace using the example jdb out
         String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a1));
-        assertTrue(Files.exists(Paths.get(TEST_TEXT_OUT_FILENAME)));
         // change this to true after stats code written
         assertFalse(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
         // generate a visualized stats file using a puml trace using the example jdb out
         String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a2));
-        assertTrue(Files.exists(Paths.get(TEST_PUML_OUT_FILENAME)));
         // change this to true after stats code written
         assertFalse(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
