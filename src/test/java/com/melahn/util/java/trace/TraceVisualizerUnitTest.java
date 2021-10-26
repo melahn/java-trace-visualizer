@@ -2,18 +2,12 @@ package com.melahn.util.java.trace;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.spy;
 
 import java.io.BufferedWriter;
@@ -68,7 +62,6 @@ class TraceVisualizerUnitTest {
     private static final String EXPECTED = TraceVisualizerTestUtil.generateRandomString(10);
     private static final PrintStream INITIAL_OUT = System.out;
     private static final String EXAMPLE_JDB_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.jdb.out.txt";
-    private static final String EXAMPLE_TEXT_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.txt";
     private static final String TEST_PUML_OUT_FILENAME = "./target/example-single-thread-trace-file.puml";
     private static final String TEST_STATS_OUT_FILENAME = "./target/example-single-thread-trace-file-stats.txt";
     private static final String TEST_TEXT_OUT_FILENAME = "./target/example-single-thread-trace-file.txt";
@@ -90,7 +83,6 @@ class TraceVisualizerUnitTest {
 
     @Test
     void normalTest() {
-        TraceVisualizer t = new TraceVisualizer();
         // no parameters
         assertDoesNotThrow(()->TraceVisualizer.main(new String[0]));
         // generate a visualized text trace using the example jdb out
@@ -106,7 +98,6 @@ class TraceVisualizerUnitTest {
 
     @Test
     void statsTest() {
-        TraceVisualizer t = new TraceVisualizer();
         // generate a visualized stats file using a text trace using the example jdb out
         String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a1));
