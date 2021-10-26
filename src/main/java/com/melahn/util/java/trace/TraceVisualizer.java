@@ -18,7 +18,7 @@ public class TraceVisualizer {
         Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
         try {
             if (parseArgs(a)) {
-                TraceVisualizerPrinter t = inputFilename.endsWith(".puml") ? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, null)
+                TraceVisualizerPrinter t = outputFilename.endsWith(".puml") ? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, null)
                         : new TraceVisualizerTextPrinter(inputFilename, outputFilename, null);
                 t.processRawTraceFile();
             }
