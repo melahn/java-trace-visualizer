@@ -25,6 +25,7 @@ java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar
 Flags:
   -i  <filename>  The name of the input file 
   -o  <filename>  The name of output file
+  -s  <filename>  The name of stats file
   -g              Generate image from the PlantUML file
   -h              Help               
 ```
@@ -37,6 +38,8 @@ Flags:
   * **-o** \<filename\>
     * The name of the output file to be created. If the name has the extension 'puml', the file will be written in *PlantUML* format. Otherwse it will be written as a text file.
 * **Optional**
+  * **-o** \<filename\>
+    * The name of the output file to be created to hold generated statistics. This is a csv file.
   * **-g**
     * Generate image. Whenever specified, an image file is generated from the PlantUML file.  This is only applicable if
       the filename of the generated output file has the extension 'puml'.
