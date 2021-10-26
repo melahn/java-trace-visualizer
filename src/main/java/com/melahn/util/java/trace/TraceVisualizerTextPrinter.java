@@ -90,9 +90,9 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
      * the vertices of any parent functions that are still 'open' (meaning they have
      * unprinted children).
      * 
-     * @throws TraceVisualizerException
+     * @throws IOException
      */
-    protected void printVertices(TraceNode n) throws TraceVisualizerException {
+    protected void printVertices(TraceNode n) throws IOException {
         char[] c = new char[INDENT_INCREMENT * n.depth];
         for (int i = 0; i < c.length; i++) {
             c[i] = 32;
@@ -102,12 +102,8 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
             c[INDENT_INCREMENT * t.depth - 1] = 124;
         }
         String s = new String(c);
-        try {
-            visualizedTraceFileWriter.write(s);
-            visualizedTraceFileWriter.write("\n");
-            visualizedTraceFileWriter.write(s);
-        } catch (IOException e) {
-            throw new TraceVisualizerException(e.getMessage());
-        }
+        visualizedTraceFileWriter.write(s);
+        visualizedTraceFileWriter.write("\n");
+        visualizedTraceFileWriter.write(s);
     }
 }

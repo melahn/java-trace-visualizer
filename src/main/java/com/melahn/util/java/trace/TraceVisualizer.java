@@ -9,17 +9,25 @@ import org.apache.logging.log4j.LogManager;
 
 public class TraceVisualizer {
 
-    protected static boolean generateImage = false;
-    protected static String inputFilename = null;
-    protected static Logger logger = LogManager.getLogger();
-    protected static String outputFilename = null;
+    protected static boolean generateImage;
+    protected static String inputFilename;
+    protected static Logger logger;
+    protected static String outputFilename;
+    protected static String statsFilename;
 
     public static void main(String[] a) {
+        intializeStatics();
         Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
         try {
+            TraceVisualizerPrinter t = null;
             if (parseArgs(a)) {
-                TraceVisualizerPrinter t = outputFilename.endsWith(".puml") ? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, null)
-                        : new TraceVisualizerTextPrinter(inputFilename, outputFilename, null);
+                if (statsFilename == null) {
+                    t = outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, null)
+                            : new TraceVisualizerTextPrinter(inputFilename, outputFilename, null);
+                } else {
+                    t = outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, statsFilename, null)
+                            : new TraceVisualizerTextPrinter(inputFilename, outputFilename, statsFilename, null);
+                }
                 t.processRawTraceFile();
             }
         } catch (TraceVisualizerException e) {
@@ -34,6 +42,7 @@ public class TraceVisualizer {
         return "\nUsage:\n\n".concat("java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar\n").concat("\nFlags:\n")
                 .concat("\t-i\t<filename>\tThe input file (a trace file created from jdb)\n")
                 .concat("\t-o\t<filename>\tThe output file (a visualization file created by this program)\n")
+                .concat("\t-s\t<filename>\tThe stats file (a csv file created by this program)\n")
                 .concat("\t-g\t\t\tGenerate image from PlantUML file\n").concat("\t-h\t\t\tHelp for this program\n")
                 .concat("\nSee https://github.com/melahn/java-trace-visualizer for more information\n");
     }
@@ -49,13 +58,13 @@ public class TraceVisualizer {
         Options o = setOptions();
         try {
             CommandLine c = new DefaultParser().parse(o, a);
-            int i = parseOptions(c);
+            parseOptions(c);
             parseSwitches(c);
             if (a.length == 0 || c.hasOption("h")) {
                 logger.info(TraceVisualizer.getHelp());
                 return false;
             }
-            if (i != 2) {
+            if (inputFilename == null || outputFilename == null) {
                 throw new ParseException("Both the -i and -o options must be specified");
             }
             return true;
@@ -81,6 +90,10 @@ public class TraceVisualizer {
             setOutputFilename(c.getOptionValue("o"));
             i++;
         }
+        if (c.hasOption("s")) {
+            setStatsFilename(c.getOptionValue("s"));
+            i++;
+        }
         return i;
     }
 
@@ -104,9 +117,21 @@ public class TraceVisualizer {
         Options options = new Options();
         options.addOption("i", true, "The input file name");
         options.addOption("o", true, "The output file name");
+        options.addOption("s", true, "The stats file name");
         options.addOption("g", false, "Generate Image from PlantUML file");
         options.addOption("h", false, "Help");
         return options;
+    }
+
+     /**
+     * Resets all the static class variables.
+     */
+    private static void intializeStatics() {
+        generateImage = false;
+        inputFilename = null;
+        logger = LogManager.getLogger();
+        outputFilename = null;
+        statsFilename = null;
     }
 
     /**
@@ -135,5 +160,13 @@ public class TraceVisualizer {
 
     public static String getOutputFilename() {
         return outputFilename;
+    }
+
+    public static void setStatsFilename(String f) {
+        statsFilename = f;
+    }
+
+    public static String getStatsFilename() {
+        return statsFilename;
     }
 }

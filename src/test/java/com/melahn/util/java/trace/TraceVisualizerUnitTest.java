@@ -104,13 +104,11 @@ class TraceVisualizerUnitTest {
         // generate a visualized stats file using a text trace using the example jdb out
         String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a1));
-        // change this to true after stats code written
-        assertFalse(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
+        assertTrue(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
         // generate a visualized stats file using a puml trace using the example jdb out
         String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_OUT_FILENAME, "-s", TEST_STATS_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a2));
-        // change this to true after stats code written
-        assertFalse(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
+        assertTrue(Files.exists(Paths.get(TEST_STATS_OUT_FILENAME)));
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
@@ -128,7 +126,6 @@ class TraceVisualizerUnitTest {
             assertThrows(TraceVisualizerException.class, () -> tvtp.printFooter());
             TraceNode t = new TraceNode(0, "foo", "0", 1, null);
             assertThrows(TraceVisualizerException.class, () -> tvtp.printVisualizedTraceNode(t));
-            assertThrows(TraceVisualizerException.class, () -> tvtp.printVertices(t));
             TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
             tvpp.setLogger(logger);
             assertThrows(TraceVisualizerException.class, () -> tvpp.printHeader());
@@ -198,6 +195,8 @@ class TraceVisualizerUnitTest {
         assertEquals(e, TraceVisualizer.getInputFilename());
         TraceVisualizer.setOutputFilename(e);
         assertEquals(e, TraceVisualizer.getOutputFilename());
+        TraceVisualizer.setStatsFilename(e);
+        assertEquals(e, TraceVisualizer.getStatsFilename());
         TraceVisualizer.setGenerateImage(true);
         assertEquals(true, TraceVisualizer.getGenerateImage());
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
