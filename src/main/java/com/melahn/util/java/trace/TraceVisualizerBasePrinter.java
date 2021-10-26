@@ -8,8 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +19,7 @@ public abstract class TraceVisualizerBasePrinter {
     Logger logger = LogManager.getLogger();
     TraceNode parent = null;
     BufferedReader rawTraceFileReader = null;
-    Map<Integer, TraceNode> traceNodes = new TreeMap<>();
+    Map<Integer, TraceNode> traceNodes = new LinkedHashMap<>();
     Map<String, String> traceStats = new HashMap<>();
     BufferedWriter traceStatsFileWriter = null;
     String traceThreadName = null;
@@ -173,8 +173,7 @@ public abstract class TraceVisualizerBasePrinter {
      */
     public void setVisualizedTraceFile(String v) throws TraceVisualizerException {
         try {
-            visualizedTraceFileWriter = Files.newBufferedWriter(Paths.get(v), StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE_NEW);
+            visualizedTraceFileWriter = Files.newBufferedWriter(Paths.get(v), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new TraceVisualizerException("Error creating Visualized Trace File ".concat(v));
         }
