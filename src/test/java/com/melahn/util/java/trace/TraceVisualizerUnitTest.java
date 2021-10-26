@@ -20,9 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Writer;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -36,7 +34,28 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import com.melahn.util.test.TraceVisualizerTestUtil;
+
 class TraceVisualizerUnitTest {
+
+    public static class UnitTestTracePrinter extends TraceVisualizerBasePrinter {
+
+        UnitTestTracePrinter(String r, String v, String s, String t) throws TraceVisualizerException {
+            super(r, v, s, t);
+        }
+
+        UnitTestTracePrinter(String r, String v, String t) throws TraceVisualizerException {
+            super(r, v, t);
+        }
+        public void printHeader() throws TraceVisualizerException {super.printHeader();}
+
+        public void printFooter() throws TraceVisualizerException {super.printFooter();}
+    
+        public void printTraceStats() throws TraceVisualizerException {super.printTraceStats();}
+    
+        public void printVisualizedTraceNode(TraceNode n) throws TraceVisualizerException {super.printVisualizedTraceNode(n);};
+    
+        public void processRawTraceFile() throws TraceVisualizerException {super.processRawTraceFile();}
+    }
  
     Logger logger = LogManager.getLogger();
     private static final String DIVIDER = "-------------------------------------";
@@ -103,17 +122,32 @@ class TraceVisualizerUnitTest {
         doThrow(IOException.class).when(sbw).write(anyString());
         try (MockedStatic<Files> mf = org.mockito.Mockito.mockStatic(Files.class)) {
             mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw);
-            TraceVisualizerTextPrinter tvbp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
-            tvbp.setLogger(logger);
-            assertThrows(TraceVisualizerException.class, () -> tvbp.printHeader());
-            assertThrows(TraceVisualizerException.class, () -> tvbp.printFooter());
+            TraceVisualizerTextPrinter tvtp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+            tvtp.setLogger(logger);
+            assertThrows(TraceVisualizerException.class, () -> tvtp.printHeader());
+            assertThrows(TraceVisualizerException.class, () -> tvtp.printFooter());
             TraceNode t = new TraceNode(0, "foo", "0", 1, null);
-            assertThrows(TraceVisualizerException.class, () -> tvbp.printVisualizedTraceNode(t));
-            assertThrows(TraceVisualizerException.class, () -> tvbp.printVertices(t));
+            assertThrows(TraceVisualizerException.class, () -> tvtp.printVisualizedTraceNode(t));
+            assertThrows(TraceVisualizerException.class, () -> tvtp.printVertices(t));
+            TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+            tvpp.setLogger(logger);
+            assertThrows(TraceVisualizerException.class, () -> tvpp.printHeader());
+            assertThrows(TraceVisualizerException.class, () -> tvpp.printFooter());
+            assertThrows(TraceVisualizerException.class, () -> tvpp.printVisualizedTraceNode(t));
         }
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
+    @Test 
+    void TraceVisualizeBasePrinterTest() throws TraceVisualizerException {
+        UnitTestTracePrinter uttp = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+        assertDoesNotThrow(()->uttp.printHeader());
+        assertDoesNotThrow(()->uttp.printFooter());
+        TraceNode t = new TraceNode(0, "foo", "0", 1, null);
+        assertDoesNotThrow(()->uttp.printVisualizedTraceNode(t));
+        assertDoesNotThrow(()->uttp.processRawTraceFile());
+        System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
+    }
 
     @Test
     void helpTest() throws IOException {

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -256,7 +255,7 @@ public abstract class TraceVisualizerBasePrinter {
     protected void printVisualizedTraceNode(TraceNode n) throws TraceVisualizerException {
         try {
             visualizedTraceFileWriter
-                    .write(String.format(" printVisualizedTraceNode for %s %i", n.methodName, n.lineNumber));
+                    .write(String.format(" printVisualizedTraceNode for %s %s", n.methodName, n.lineNumber));
         } catch (IOException e) {
             throw new TraceVisualizerException(e.getMessage());
         }
@@ -270,18 +269,5 @@ public abstract class TraceVisualizerBasePrinter {
     protected void setLogger(Logger l) {
         logger = l;
         logger.debug("logger set to {} ", l);
-    }
-
-    /**
-     * Get a new Buffered Writer. Allows insertion of test for testing exception
-     * handling.
-     * 
-     * @param s the name of the file to write
-     * @return a new BufferedWriter
-     * @throws IOException
-     */
-    protected BufferedWriter getBufferedWriter(String s) throws IOException {
-        return Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8,
-                StandardOpenOption.CREATE_NEW);
     }
 }
