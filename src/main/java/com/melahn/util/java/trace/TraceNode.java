@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class TraceNode implements Comparable<TraceNode> {
+public class TraceNode {
     int id;
     String methodName;
     String lineNumber;
@@ -26,24 +26,6 @@ public class TraceNode implements Comparable<TraceNode> {
         if (parent != null) {
             p.children.add(this);
         }
-    }
-
-    @Override
-    public int compareTo(TraceNode n) {
-        return this.id - n.id;
-    }
-
-    @Override
-    public final int hashCode() {
-        return 31 * 17 + methodName.concat(String.valueOf(id)).hashCode();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o != null && this.getClass() != o.getClass()) {
-            return (((TraceNode) o).id == id);
-        }
-        return false;
     }
 
     /**
