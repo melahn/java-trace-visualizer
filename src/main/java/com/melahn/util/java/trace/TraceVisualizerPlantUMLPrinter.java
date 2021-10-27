@@ -25,7 +25,7 @@ public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter i
      /**
      * Print a PlantUML header.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an IO error occurs printing the header
      */
     @Override
     public void printHeader() throws TraceVisualizerException {
@@ -39,7 +39,7 @@ public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter i
      /**
      * Print a PlantUML footer.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an IO error occurs printing the footer
      */
     @Override
     public void printFooter() throws TraceVisualizerException {
@@ -53,7 +53,7 @@ public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter i
     /**
      * Print a visualation of the trace node in PlantUML form.  
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an IO error occurs printing the node
      */
     @Override
     public void printVisualizedTraceNode(TraceNode n) throws TraceVisualizerException {

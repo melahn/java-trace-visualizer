@@ -19,7 +19,7 @@ public abstract class TraceVisualizerBasePrinter {
     TraceNode parent = null;
     BufferedReader rawTraceFileReader = null;
     Map<Integer, TraceNode> traceNodes = new LinkedHashMap<>();
-    Map<String, String> traceStats = new HashMap<>();
+    Map<String, Integer> traceStats = new HashMap<>();
     BufferedWriter traceStatsFileWriter = null;
     String traceThreadName = null;
     BufferedWriter visualizedTraceFileWriter = null;
@@ -179,6 +179,8 @@ public abstract class TraceVisualizerBasePrinter {
 
     /**
      * Set the name of the thread.
+     * 
+     * @param t the thread name
      */
     public void setTraceThreadName(String t) {
         traceThreadName = t == null ? DEFAULT_THREAD_NAME : t;
@@ -186,6 +188,8 @@ public abstract class TraceVisualizerBasePrinter {
 
     /**
      * Get the name of the thread.
+     * 
+     * @return the thread name
      */
     public String getTraceThreadName() {
         return traceThreadName;
@@ -209,6 +213,7 @@ public abstract class TraceVisualizerBasePrinter {
             traceNodes.put(l, n);
             parent = n;
             depth++;
+            collectTraceStats(methodName);
         } else if (t.contains("Method exited:")) {
             parent = parent.parent;
             depth--;
@@ -216,14 +221,13 @@ public abstract class TraceVisualizerBasePrinter {
     }
 
     /**
-     * Collects stats about a line in the visualization file.
+     * Updates the number of calls on a method.
      * 
-     * @param l A line of text from the visualization trace file.
+     * @param m A method name
+     * @return the number of calls to m, so far collected
      */
-    protected void collectTraceStats(String l) {
-        if (traceStatsFileWriter != null) {
-            logger.debug("Stats collected for line {}.", l);
-        }
+    protected Integer collectTraceStats(String m) {
+        return traceStats.get(m) == null?traceStats.put(m, 1):traceStats.replace(m, traceStats.get(m) + 1);
     }
 
     /**
@@ -255,6 +259,7 @@ public abstract class TraceVisualizerBasePrinter {
     /**
      * Prints trace information for a given trace node.
      * 
+     * @param n the trace node to print
      * @throws TraceVisualizerException if an IO error occurs writing the line
      */
     protected void printVisualizedTraceNode(TraceNode n) throws TraceVisualizerException {

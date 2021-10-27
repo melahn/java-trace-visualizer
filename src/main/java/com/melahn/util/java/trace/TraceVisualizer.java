@@ -15,6 +15,10 @@ public class TraceVisualizer {
     protected static String outputFilename;
     protected static String statsFilename;
 
+    TraceVisualizer() {
+        /* Nothing to do here */
+    }
+
     public static void main(String[] a) {
         intializeStatics();
         Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
@@ -38,8 +42,10 @@ public class TraceVisualizer {
 
     /**
      * Gets Help.
+     * 
+     * @return the help that the user would see on the command line
      */
-    public static String getHelp() {
+    private static String getHelp() {
         return "\nUsage:\n\n".concat("java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar\n").concat("\nFlags:\n")
                 .concat("\t-i\t<filename>\tThe input file (a trace file created from jdb)\n")
                 .concat("\t-o\t<filename>\tThe output file (a visualization file created by this program)\n")
@@ -55,7 +61,7 @@ public class TraceVisualizer {
      * @return boolean true if processing should continue, false otherwise
      * @throws TraceVisualizerException should a parse error occur
      */
-    protected static boolean parseArgs(String[] a) throws TraceVisualizerException {
+    private static boolean parseArgs(String[] a) throws TraceVisualizerException {
         Options o = setOptions();
         try {
             CommandLine c = new DefaultParser().parse(o, a);
@@ -136,37 +142,75 @@ public class TraceVisualizer {
     }
 
     /**
-     * Getters and Setters
+     * Set the image generate option.
+     * 
+     * @param b a boolean representing whether the user wanted to 
+     * generate the image from a PlantUML file
      */
-
     public static void setGenerateImage(boolean b) {
         generateImage = b;
     }
 
+    /**
+     * Get the image generate option.
+     * 
+     * @return a boolean representing whether the user wanted to 
+     * generate the image from a PlantUML file
+     */
     public static boolean getGenerateImage() {
         return generateImage;
     }
 
+    /**
+     * Set the input trace file name.
+     * 
+     * @param f the input trace file name
+     */
     public static void setInputFilename(String f) {
         inputFilename = f;
     }
 
+    /**
+     * Get the input trace file name.
+     * 
+     * @return the input trace file name
+     */
     public static String getInputFilename() {
         return inputFilename;
     }
 
+    /**
+     * Set the output visualized trace file name.
+     * 
+     * @param f visualized trace file name
+     */
     public static void setOutputFilename(String f) {
         outputFilename = f;
     }
 
+     /**
+     * Get the output visualized trace file name.
+     * 
+     * @return the output visualized trace file name
+     */
     public static String getOutputFilename() {
         return outputFilename;
     }
 
+    /**
+     * Set the stats file name.
+     * 
+     * @param f stats file name
+     */
     public static void setStatsFilename(String f) {
         statsFilename = f;
     }
 
+    /**
+     * Get the stats file name.
+     * 
+     * @return the stats file name
+     */
     public static String getStatsFilename() {
         return statsFilename;
     }

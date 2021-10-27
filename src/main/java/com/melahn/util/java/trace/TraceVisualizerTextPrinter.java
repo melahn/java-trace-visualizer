@@ -10,7 +10,7 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
     /**
      * Constructor with stats file name.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an error occurs from super
      */
     TraceVisualizerTextPrinter(String r, String v, String s, String t) throws TraceVisualizerException {
         super(r, v, s, t);
@@ -19,7 +19,7 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
     /**
      * Constructor without stats file name.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an error occurs from super
      */
     TraceVisualizerTextPrinter(String r, String v, String t) throws TraceVisualizerException {
         super(r, v, t);
@@ -28,7 +28,7 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
     /**
      * Print a header consisting of just an indicator of the thread.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an IO error occurs printing the header
      */
     @Override
     public void printHeader() throws TraceVisualizerException {
@@ -44,7 +44,7 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
      * Print a footer consisting of a time stamp and a pointer to the github
      * project.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an IO error occurs printing the footer
      */
     @Override
     public void printFooter() throws TraceVisualizerException {
@@ -63,7 +63,7 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
      * Print a visualation of the trace node in text form. And record that it has been
      * printed so that vertices of later trace nodes can be printed properly computed.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException when an IO error occurs printing the node
      */
     @Override
     public void printVisualizedTraceNode(TraceNode n) throws TraceVisualizerException {
@@ -90,7 +90,13 @@ public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter imple
      * the vertices of any parent functions that are still 'open' (meaning they have
      * unprinted children).
      * 
-     * @throws IOException
+     * Note that I don't return a TraceVisualizerException here as I do in most other
+     * methods because this makes it possible to cover the test of the IO Exception 
+     * in the caller instead of here, which would otherwise require a getter to obtain
+     * the writer.  A small optimization.
+     * 
+     * @param n the node the relevent vertices of which are to be printed
+     * @throws IOException when an IO Exception occurs writing the vertices
      */
     protected void printVertices(TraceNode n) throws IOException {
         char[] c = new char[INDENT_INCREMENT * n.depth];

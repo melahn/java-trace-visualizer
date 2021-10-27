@@ -91,6 +91,8 @@ class TraceVisualizerUnitTest {
     @Test
     void normalTest() {
         // no parameters
+        TraceVisualizer t = new TraceVisualizer();
+        assertTrue(t instanceof TraceVisualizer);
         assertDoesNotThrow(()->TraceVisualizer.main(new String[0]));
         // generate a visualized text trace using the example jdb out
         String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME};
