@@ -210,9 +210,7 @@ public abstract class TraceVisualizerBasePrinter {
             parent = n;
             depth++;
         } else if (t.contains("Method exited:")) {
-            if (parent != null) {
-                parent = parent.parent;
-            }
+            parent = parent.parent;
             depth--;
         }
     }

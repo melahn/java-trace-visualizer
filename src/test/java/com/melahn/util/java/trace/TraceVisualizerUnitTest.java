@@ -68,7 +68,7 @@ class TraceVisualizerUnitTest {
     private static final Path TEST_READ_PATH = Paths.get(TEST_READ_FILENAME);
     private static final String TEST_PUML_OUT_FILENAME = "./target/example-single-thread-trace-file.puml";
     private static final String TEST_STATS_OUT_FILENAME = "./target/example-single-thread-trace-file-stats.txt";
-    private static final String TEST_TEXT_OUT_FILENAME = "./target/example-single-thread-trace-file.txt";
+    private static final String TEST_TEXT_OUT_FILENAME = "./src/test/resource//example-single-thread-trace-file.txt";
     private static final Path TEST_OUT_PATH = Paths.get("./target/test/out");
 
     @BeforeAll
@@ -85,6 +85,9 @@ class TraceVisualizerUnitTest {
         System.out.println(DIVIDER.concat(" UNIT TESTS END ").concat(DIVIDER));
     }
 
+     /** 
+     * Tests the happy path cases for text and plantuml visualizations.
+     */
     @Test
     void normalTest() {
         // no parameters
@@ -100,6 +103,9 @@ class TraceVisualizerUnitTest {
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
+    /** 
+     * Tests the stats handling.
+     */
     @Test
     void statsTest() {
         // generate a visualized stats file using a text trace using the example jdb out
@@ -113,6 +119,12 @@ class TraceVisualizerUnitTest {
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
+    /**
+     * Tests the handling of IOExceptions by forcing such exceptions using spies and static mocks.
+     * 
+     * @throws IOException
+     * @throws TraceVisualizerException
+     */
     @Test
     void IOExceptionsTest() throws IOException, TraceVisualizerException {
         BufferedWriter bw1 = new BufferedWriter(new FileWriter("./target/foowrite.txt"));
@@ -150,10 +162,23 @@ class TraceVisualizerUnitTest {
             mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw2);
             UnitTestTracePrinter uttp2 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
             assertThrows(TraceVisualizerException.class, () -> uttp2.printTraceStats());
+            assertThrows(TraceVisualizerException.class, () -> uttp2.printHeader());
+            assertThrows(TraceVisualizerException.class, () -> uttp2.printFooter());
+            assertThrows(TraceVisualizerException.class, () -> uttp2.printVisualizedTraceNode(t));
+            UnitTestTracePrinter uttp3 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
+            mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenThrow(IOException.class);
+            assertThrows(TraceVisualizerException.class, () -> uttp3.setTraceStatsFile(TEST_STATS_OUT_FILENAME));
+            assertThrows(TraceVisualizerException.class, () -> uttp3.setVisualizedTraceFile(TEST_TEXT_OUT_FILENAME));
         }
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
+    /**
+     * Tests the base class behaviour.
+     * 
+     * @throws IOException
+     * @throws TraceVisualizerException
+     */
     @Test 
     void TraceVisualizeBasePrinterTest() throws IOException, TraceVisualizerException {
         UnitTestTracePrinter uttp1 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
@@ -174,6 +199,11 @@ class TraceVisualizerUnitTest {
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
+    /**
+     * Tests help.
+     * 
+     * @throws IOException
+     */
     @Test
     void helpTest() throws IOException {
         try (ByteArrayOutputStream o = new ByteArrayOutputStream()) {
@@ -194,6 +224,11 @@ class TraceVisualizerUnitTest {
     }
 
 
+    /**
+     * Tests option combos.
+     * 
+     * @throws IOException
+     */
     @Test
     void optionsTest() throws IOException {
         try (ByteArrayOutputStream o = new ByteArrayOutputStream()) {
@@ -216,6 +251,9 @@ class TraceVisualizerUnitTest {
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
     
+    /**
+     * Just bread and butter getter and setter testing.
+     */
     @Test
     void getterSetterTest() {
         String e = EXPECTED;
