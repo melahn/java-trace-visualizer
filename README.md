@@ -24,8 +24,8 @@ java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar
 
 Flags:
   -i  <filename>  The name of the input file 
-  -o  <filename>  The name of output file
-  -s  <filename>  The name of stats file
+  -o  <filename>  The name of the output file
+  -s  <filename>  The name of the stats file
   -g              Generate image from the PlantUML file
   -h              Help               
 ```
