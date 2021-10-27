@@ -38,7 +38,7 @@ Flags:
   * **-o** \<filename\>
     * The name of the output file to be created. If the name has the extension 'puml', the file will be written in *PlantUML* format. Otherwse it will be written as a text file.
 * **Optional**
-  * **-o** \<filename\>
+  * **-s** \<filename\>
     * The name of the output file to be created to hold generated statistics. This is a csv file.
   * **-g**
     * Generate image. Whenever specified, an image file is generated from the PlantUML file.  This is only applicable if
