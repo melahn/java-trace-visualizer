@@ -115,19 +115,24 @@ class TraceVisualizerUnitTest {
 
     @Test
     void IOExceptionsTest() throws IOException, TraceVisualizerException {
-        BufferedWriter bw = new BufferedWriter(new FileWriter("./target/foowrite.txt"));
-        BufferedWriter sbw = spy(bw);
+        BufferedWriter bw1 = new BufferedWriter(new FileWriter("./target/foowrite.txt"));
+        BufferedWriter sbw1 = spy(bw1);
         // this spy throws an IO Exception when asked to write any string 
-        doThrow(IOException.class).when(sbw).write(anyString());
+        doThrow(IOException.class).when(sbw1).write(anyString());
         if (!Files.exists(TEST_READ_PATH)) {
             Files.createFile(TEST_READ_PATH);
         }
         BufferedReader br = new BufferedReader(new FileReader(TEST_READ_FILENAME));
         BufferedReader sbr = spy(br);
         // this spy throws an IO Exception when asked to read 
+        BufferedWriter bw2 = new BufferedWriter(new FileWriter("./target/foostats.txt"));
         doThrow(IOException.class).when(sbr).readLine();
+        BufferedWriter sbw2 = spy(bw2);
+        // this spy throws an IO Exception when asked to write any string or on close
+        doThrow(IOException.class).when(sbw2).write(anyString());
+        doThrow(IOException.class).when(sbw2).close();
         try (MockedStatic<Files> mf = org.mockito.Mockito.mockStatic(Files.class)) {
-            mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw);
+            mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw1);
             TraceVisualizerTextPrinter tvtp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
             tvtp.setLogger(logger);
             assertThrows(TraceVisualizerException.class, () -> tvtp.printHeader());
@@ -140,8 +145,11 @@ class TraceVisualizerUnitTest {
             assertThrows(TraceVisualizerException.class, () -> tvpp.printFooter());
             assertThrows(TraceVisualizerException.class, () -> tvpp.printVisualizedTraceNode(t));
             mf.when(() -> Files.newBufferedReader(any(Path.class))).thenReturn(sbr);
-            UnitTestTracePrinter uttp = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
-            assertThrows(TraceVisualizerException.class, () -> uttp.processRawTraceFile());
+            UnitTestTracePrinter uttp1 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
+            assertThrows(TraceVisualizerException.class, () -> uttp1.processRawTraceFile());
+            mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw2);
+            UnitTestTracePrinter uttp2 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, TEST_STATS_OUT_FILENAME, null);
+            assertThrows(TraceVisualizerException.class, () -> uttp2.printTraceStats());
         }
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
