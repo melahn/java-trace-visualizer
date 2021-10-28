@@ -119,6 +119,17 @@ public abstract class TraceVisualizerBasePrinter {
     }
 
     /**
+     * Handles the primtImage method by throwing an exception.
+     * 
+     * @param f the name of the file for whih an image is requested
+     * @throws TraceVisualizerException
+     */
+    public void printImage(String f) throws TraceVisualizerException {
+        logger.debug("{} does not know how to print an image", this.getClass().getName());
+        throw new TraceVisualizerException(String.format("%s does not know how to print an image", this.getClass().getName()));
+    }
+
+    /**
      * Sets the name of the raw trace file which causes a reader to be created.
      * 
      * @param t the raw trace file name

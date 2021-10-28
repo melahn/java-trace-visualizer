@@ -1,8 +1,12 @@
 package com.melahn.util.java.trace;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter implements TraceVisualizerPrinter {
 
@@ -72,6 +76,35 @@ public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter i
             b.append(n.methodName).append(" | ").append("<color:Gray>").append(n.lineNumber).append("\n");
             visualizedTraceFileWriter.write(b.toString());
         } catch (IOException e) {
+            throw new TraceVisualizerException(e.getMessage());
+        }
+    }
+
+    /**
+     * Generates an image from a PUML file
+     * 
+     * @param f the name of the Plant UML file
+     * @throws TraceVisualizerException if an error occurred generaing the image
+     */
+    @Override
+    public void printImage(String f) throws TraceVisualizerException {
+        try {
+            net.sourceforge.plantuml.SourceFileReader r = new net.sourceforge.plantuml.SourceFileReader(Paths.get(f).toAbsolutePath().toFile());
+            if (!r.hasError()) {
+                List<net.sourceforge.plantuml.GeneratedImage> l = r.getGeneratedImages();
+                if (!l.isEmpty()) {
+                    Path s = Paths.get(l.get(0).getPngFile().toString());
+                    Path t = Paths.get(Paths.get(f).toAbsolutePath().toString().replace("puml", "png"));
+                    Files.move(s, t);
+                    logger.debug("Image file {} generated from {}", s, t);
+                } else {
+                    logger.debug("Warning: Image file {} was not generated from ", f);
+                }
+            } else {
+                logger.error("Error in net.sourceforge.plantuml.GeneratedImage trying to generate image from {}", f);
+            }
+        } catch (IOException e) {
+            logger.error("IOException in net.sourceforge.plantuml.GeneratedImage trying to generate image from {}", f);
             throw new TraceVisualizerException(e.getMessage());
         }
     }

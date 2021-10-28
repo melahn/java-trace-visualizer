@@ -62,6 +62,7 @@ class TraceVisualizerUnitTest {
     private static final String EXAMPLE_JDB_OUT_FILENAME = "./resource/example/example-single-thread-trace-file.jdb.out.txt";
     private static final String TEST_READ_FILENAME = "./target/test-read.txt";
     private static final Path TEST_READ_PATH = Paths.get(TEST_READ_FILENAME);
+    private static final String TEST_PNG_FILENAME = "./target/example-single-thread-trace-file.png";
     private static final String TEST_PUML_FILENAME = "./target/example-single-thread-trace-file.puml";
     private static final String TEST_STATS_FILENAME = "./target/example-single-thread-trace-file-stats.txt";
     private static final String TEST_TEXT_FILENAME = "./target/example-single-thread-trace-file.txt";
@@ -85,7 +86,7 @@ class TraceVisualizerUnitTest {
      * Tests the happy path cases for text and plantuml visualizations.
      */
     @Test
-    void normalTest() {
+    void normalTest() throws IOException {
         // no parameters
         TraceVisualizer t = new TraceVisualizer();
         assertTrue(t instanceof TraceVisualizer);
@@ -98,7 +99,15 @@ class TraceVisualizerUnitTest {
         // generate the test visualized puml trace using the example jdb out
         String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a2));
-        assertTrue(Files.exists(Paths.get(TEST_TEXT_FILENAME)));
+        assertTrue(Files.exists(Paths.get(TEST_PUML_FILENAME)));
+        // generate a png from the puml file 
+        if (Files.exists(Paths.get(TEST_PNG_FILENAME))) {
+            Files.delete(Paths.get(TEST_PNG_FILENAME));
+        }
+        String[] a3 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_FILENAME, "-g"};
+        assertDoesNotThrow(()->TraceVisualizer.main(a3));
+        assertTrue(Files.exists(Paths.get(TEST_PUML_FILENAME)));
+        //assertTrue(Files.exists(Paths.get(TEST_PNG_FILENAME)));
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 
