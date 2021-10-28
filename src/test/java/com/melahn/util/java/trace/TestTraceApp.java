@@ -23,13 +23,12 @@ package com.melahn.util.java.trace;
 public class TestTraceApp {
     public static void main (String[] a) {
         A();
-        C();
-        E();
-        I();
-        B();
     }
 
     private static void A() {
+        B();
+        C();
+        E();
         B();
     }
 
@@ -58,7 +57,7 @@ public class TestTraceApp {
     }
     
     private static void H() {
-        /** Nothing to do */
+        I();
     }
 
     private static void I() {
