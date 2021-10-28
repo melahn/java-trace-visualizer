@@ -83,3 +83,34 @@ java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.txt
 
 Generated on 2021/10/25 16:23:57 by com.melahn.util.java.trace.TraceVisualizerTextPrinter (https://github.com/melahn/java-trace-visualizer)
 ```
+
+### Example Image Output
+![Image generated from PlantUML](./resource/example/example-single-thread-trace-file.png)
+
+### Example PlantUML File Output
+
+``` text
+@startuml Java Trace
+scale 2
+skinparam FooterFontColor Gray
+skinparam FooterFontSize 6
+salt
+{
+    {T
+         Method Call |  Line Number
+        +start | <color:Gray>0
+        ++ com.melahn.util.java.trace.TestTraceApp.A() | <color:Gray>29
+        +++ com.melahn.util.java.trace.TestTraceApp.B() | <color:Gray>37
+        +++ com.melahn.util.java.trace.TestTraceApp.C() | <color:Gray>40
+        ++++ com.melahn.util.java.trace.TestTraceApp.D() | <color:Gray>45
+        +++ com.melahn.util.java.trace.TestTraceApp.E() | <color:Gray>48
+        ++++ com.melahn.util.java.trace.TestTraceApp.F() | <color:Gray>52
+        +++++ com.melahn.util.java.trace.TestTraceApp.G() | <color:Gray>56
+        ++++++ com.melahn.util.java.trace.TestTraceApp.H() | <color:Gray>60
+        +++++++ com.melahn.util.java.trace.TestTraceApp.I() | <color:Gray>65
+        +++ com.melahn.util.java.trace.TestTraceApp.B() | <color:Gray>37
+    }
+}
+center footer Generated on 2021/10/28 15:20:29 by com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter(https://github.com/melahn/java-trace-visualizer)
+@enduml
+```
