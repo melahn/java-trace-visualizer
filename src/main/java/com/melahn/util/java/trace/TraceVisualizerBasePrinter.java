@@ -101,9 +101,14 @@ public abstract class TraceVisualizerBasePrinter {
      */
     public void printTraceStats() throws TraceVisualizerException {
         try {
+            int i = 0;
             if (traceStatsFileWriter != null) {
                 for (Map.Entry<String, Integer> e : traceStats.entrySet()) {
-                    traceStatsFileWriter.write(e.getKey().concat(",").concat(e.getValue().toString()).concat("\n"));
+                    StringBuilder s = new StringBuilder(e.getKey()).append(",").append(e.getValue().toString());
+                    if (++i < traceStats.size()) { // avoid a blank at the end of file
+                        s.append("\n");
+                    }
+                    traceStatsFileWriter.write(s.toString());
                 }
                 traceStatsFileWriter.close();
                 logger.debug("Trace Stats Printed");

@@ -1,0 +1,34 @@
+Initializing jdb ...
+> Deferring breakpoint com.melahn.util.java.trace.TestTraceApp.main.
+It will be set after the class is loaded.
+> run com.melahn.util.java.trace.TestTraceApp
+Set uncaught java.lang.Throwable
+Set deferred uncaught java.lang.Throwable
+> 
+VM Started: Set deferred breakpoint com.melahn.util.java.trace.TestTraceApp.main
+
+Breakpoint hit: "thread=main", com.melahn.util.java.trace.TestTraceApp.main(), line=25 bci=0
+
+main[1] main[1] main[1] > Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.A(), line=29 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.B(), line=37 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.B(), line=37 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.C(), line=40 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.D(), line=45 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.D(), line=45 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.C(), line=41 bci=3
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.E(), line=48 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.F(), line=52 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.G(), line=56 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.H(), line=60 bci=0
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.I(), line=65 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.I(), line=65 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.H(), line=61 bci=3
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.G(), line=57 bci=3
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.F(), line=53 bci=3
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.E(), line=49 bci=3
+Method entered: "thread=main", com.melahn.util.java.trace.TestTraceApp.B(), line=37 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.B(), line=37 bci=0
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.A(), line=33 bci=12
+Method exited: return value = <void value>, "thread=main", com.melahn.util.java.trace.TestTraceApp.main(), line=26 bci=3
+
+The application exited
