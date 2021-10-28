@@ -1,0 +1,21 @@
+@startuml trace
+salt
+{
+{T
+ +start|0
+ ++ com.melahn.util.java.trace.TestTraceApp.A()|29
+ +++ com.melahn.util.java.trace.TestTraceApp.B()|37
+ +++ com.melahn.util.java.trace.TestTraceApp.C()|40
+ ++++ com.melahn.util.java.trace.TestTraceApp.D()|45
+ +++ com.melahn.util.java.trace.TestTraceApp.E()|48
+ ++++ com.melahn.util.java.trace.TestTraceApp.F()|52
+ +++++ com.melahn.util.java.trace.TestTraceApp.G()|56
+ ++++++ com.melahn.util.java.trace.TestTraceApp.H()|60
+ +++++++ com.melahn.util.java.trace.TestTraceApp.I()|65
+ +++ com.melahn.util.java.trace.TestTraceApp.B()|37
+
+
+center footer Generated on 2021/10/28 09:16:42 by com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter(https://github.com/melahn/java-trace-visualizer)
+}
+}
+@enduml

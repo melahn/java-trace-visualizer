@@ -61,6 +61,8 @@ class TraceVisualizerUnitTest {
     private static final PrintStream INITIAL_OUT = System.out;
     private static final String EXAMPLE_JDB_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.jdb.out.txt";
     private static final String EXAMPLE_STATS_FILENAME = "./src/test/resource/example-single-thread-trace-stats.csv";
+    private static final String EXAMPLE_PUML_OUT_FILENAME = "./src/test/resource//example-single-thread-trace-file.puml";
+    private static final String EXAMPLE_TEXT_OUT_FILENAME = "./src/test/resource//example-single-thread-trace-file.txt";
     private static final String TEST_READ_FILENAME = "./target/test-read.txt";
     private static final Path TEST_READ_PATH = Paths.get(TEST_READ_FILENAME);
     private static final String TEST_PUML_OUT_FILENAME = "./target/example-single-thread-trace-file.puml";
@@ -91,12 +93,12 @@ class TraceVisualizerUnitTest {
         TraceVisualizer t = new TraceVisualizer();
         assertTrue(t instanceof TraceVisualizer);
         assertDoesNotThrow(()->TraceVisualizer.main(new String[0]));
-        // generate a visualized text trace using the example jdb out
-        String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-s", EXAMPLE_STATS_FILENAME, "-o", TEST_TEXT_OUT_FILENAME};
+        // generate the example visualized text trace using the example jdb out
+        String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-s", EXAMPLE_STATS_FILENAME, "-o", EXAMPLE_TEXT_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a1));
         assertTrue(Files.exists(Paths.get(TEST_TEXT_OUT_FILENAME)));
-        // generate a visualized puml trace using the example jdb out
-        String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_OUT_FILENAME};
+        // generate the example visualized puml trace using the example jdb out
+        String[] a2 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", EXAMPLE_PUML_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a2));
         assertTrue(Files.exists(Paths.get(TEST_PUML_OUT_FILENAME)));
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
