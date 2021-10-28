@@ -5,21 +5,12 @@ import java.io.IOException;
 public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter implements TraceVisualizerPrinter {
     
     /**
-     * Constructor with stats file name.
+     * Constructor.
      * 
      * @throws TraceVisualizerException
      */
     TraceVisualizerPlantUMLPrinter(String r, String v, String s, String t) throws TraceVisualizerException {
         super(r, v, s, t);
-    }
-
-    /**
-     * Constructor without stats file name.
-     * 
-     * @throws TraceVisualizerException
-     */
-    TraceVisualizerPlantUMLPrinter(String r, String v, String t) throws TraceVisualizerException {
-        super(r, v, t);
     }
 
      /**

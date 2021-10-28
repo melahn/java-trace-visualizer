@@ -9,31 +9,24 @@ import org.apache.logging.log4j.LogManager;
 
 public class TraceVisualizer {
 
-    protected static boolean generateImage;
-    protected static String inputFilename;
-    protected static Logger logger;
-    protected static String outputFilename;
-    protected static String statsFilename;
+    private boolean generateImage = false;
+    private String inputFilename = null;
+    private static Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
+    private String outputFilename = null;
+    private String statsFilename = null;
 
     TraceVisualizer() {
         /* Nothing to do here */
     }
 
     public static void main(String[] a) {
-        intializeStatics();
-        Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
         try {
-            TraceVisualizerPrinter t = null;
-            if (parseArgs(a)) {
-                if (statsFilename == null) {
-                    t = outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, null)
-                            : new TraceVisualizerTextPrinter(inputFilename, outputFilename, null);
-                } else {
-                    t = outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(inputFilename, outputFilename, statsFilename, null)
-                            : new TraceVisualizerTextPrinter(inputFilename, outputFilename, statsFilename, null);
-                }
-                t.processRawTraceFile();
-                t.printTraceStats();
+            TraceVisualizer tv = new TraceVisualizer();
+            if (tv.parseArgs(a)) {
+                TraceVisualizerPrinter tvp = tv.outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(tv.inputFilename, tv.outputFilename, tv.statsFilename, null)
+                            : new TraceVisualizerTextPrinter(tv.inputFilename, tv.outputFilename, tv.statsFilename, null);
+                tvp.processRawTraceFile();
+                tvp.printTraceStats();
             }
         } catch (TraceVisualizerException e) {
             logger.error("A TraceVisualizerException occured: ".concat(e.getLocalizedMessage()));
@@ -45,7 +38,7 @@ public class TraceVisualizer {
      * 
      * @return the help that the user would see on the command line
      */
-    private static String getHelp() {
+    private String getHelp() {
         return "\nUsage:\n\n".concat("java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar\n").concat("\nFlags:\n")
                 .concat("\t-i\t<filename>\tThe input file (a trace file created from jdb)\n")
                 .concat("\t-o\t<filename>\tThe output file (a visualization file created by this program)\n")
@@ -61,14 +54,14 @@ public class TraceVisualizer {
      * @return boolean true if processing should continue, false otherwise
      * @throws TraceVisualizerException should a parse error occur
      */
-    private static boolean parseArgs(String[] a) throws TraceVisualizerException {
+    private boolean parseArgs(String[] a) throws TraceVisualizerException {
         Options o = setOptions();
         try {
             CommandLine c = new DefaultParser().parse(o, a);
             parseOptions(c);
             parseSwitches(c);
             if (a.length == 0 || c.hasOption("h")) {
-                logger.info(TraceVisualizer.getHelp());
+                logger.info(getHelp());
                 return false;
             }
             if (inputFilename == null || outputFilename == null) {
@@ -87,7 +80,7 @@ public class TraceVisualizer {
      * @param c the command line
      * @return a count of the options found
      */
-    private static int parseOptions(CommandLine c) {
+    private int parseOptions(CommandLine c) {
         int i = 0;
         if (c.hasOption("i")) {
             setInputFilename(c.getOptionValue("i"));
@@ -109,7 +102,7 @@ public class TraceVisualizer {
      * 
      * @param c the command line
      */
-    private static void parseSwitches(CommandLine c) {
+    private void parseSwitches(CommandLine c) {
         if (c.hasOption("g")) {
             setGenerateImage(true);
         }
@@ -120,7 +113,7 @@ public class TraceVisualizer {
      * 
      * @returns the Options
      */
-    private static Options setOptions() {
+    private Options setOptions() {
         Options options = new Options();
         options.addOption("i", true, "The input file name");
         options.addOption("o", true, "The output file name");
@@ -130,24 +123,13 @@ public class TraceVisualizer {
         return options;
     }
 
-     /**
-     * Resets all the static class variables.
-     */
-    private static void intializeStatics() {
-        generateImage = false;
-        inputFilename = null;
-        logger = LogManager.getLogger();
-        outputFilename = null;
-        statsFilename = null;
-    }
-
     /**
      * Set the image generate option.
      * 
      * @param b a boolean representing whether the user wanted to 
      * generate the image from a PlantUML file
      */
-    public static void setGenerateImage(boolean b) {
+    public void setGenerateImage(boolean b) {
         generateImage = b;
     }
 
@@ -157,7 +139,7 @@ public class TraceVisualizer {
      * @return a boolean representing whether the user wanted to 
      * generate the image from a PlantUML file
      */
-    public static boolean getGenerateImage() {
+    public boolean getGenerateImage() {
         return generateImage;
     }
 
@@ -166,7 +148,7 @@ public class TraceVisualizer {
      * 
      * @param f the input trace file name
      */
-    public static void setInputFilename(String f) {
+    public void setInputFilename(String f) {
         inputFilename = f;
     }
 
@@ -175,7 +157,7 @@ public class TraceVisualizer {
      * 
      * @return the input trace file name
      */
-    public static String getInputFilename() {
+    public String getInputFilename() {
         return inputFilename;
     }
 
@@ -184,7 +166,7 @@ public class TraceVisualizer {
      * 
      * @param f visualized trace file name
      */
-    public static void setOutputFilename(String f) {
+    public void setOutputFilename(String f) {
         outputFilename = f;
     }
 
@@ -193,7 +175,7 @@ public class TraceVisualizer {
      * 
      * @return the output visualized trace file name
      */
-    public static String getOutputFilename() {
+    public String getOutputFilename() {
         return outputFilename;
     }
 
@@ -202,7 +184,7 @@ public class TraceVisualizer {
      * 
      * @param f stats file name
      */
-    public static void setStatsFilename(String f) {
+    public void setStatsFilename(String f) {
         statsFilename = f;
     }
 
@@ -211,7 +193,7 @@ public class TraceVisualizer {
      * 
      * @return the stats file name
      */
-    public static String getStatsFilename() {
+    public String getStatsFilename() {
         return statsFilename;
     }
 }

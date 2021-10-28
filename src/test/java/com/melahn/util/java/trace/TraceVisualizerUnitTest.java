@@ -40,10 +40,6 @@ class TraceVisualizerUnitTest {
             super(r, v, s, t);
         }
 
-        UnitTestTracePrinter(String r, String v, String t) throws TraceVisualizerException {
-            super(r, v, t);
-        }
-
         UnitTestTracePrinter() {
             super();
         }
@@ -64,6 +60,7 @@ class TraceVisualizerUnitTest {
     private static final String EXPECTED = TraceVisualizerTestUtil.generateRandomString(10);
     private static final PrintStream INITIAL_OUT = System.out;
     private static final String EXAMPLE_JDB_OUT_FILENAME = "./src/test/resource/example-single-thread-trace-file.jdb.out.txt";
+    private static final String EXAMPLE_STATS_FILENAME = "./src/test/resource/example-single-thread-trace-stats.csv";
     private static final String TEST_READ_FILENAME = "./target/test-read.txt";
     private static final Path TEST_READ_PATH = Paths.get(TEST_READ_FILENAME);
     private static final String TEST_PUML_OUT_FILENAME = "./target/example-single-thread-trace-file.puml";
@@ -95,7 +92,7 @@ class TraceVisualizerUnitTest {
         assertTrue(t instanceof TraceVisualizer);
         assertDoesNotThrow(()->TraceVisualizer.main(new String[0]));
         // generate a visualized text trace using the example jdb out
-        String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_TEXT_OUT_FILENAME};
+        String[] a1 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-s", EXAMPLE_STATS_FILENAME, "-o", TEST_TEXT_OUT_FILENAME};
         assertDoesNotThrow(()->TraceVisualizer.main(a1));
         assertTrue(Files.exists(Paths.get(TEST_TEXT_OUT_FILENAME)));
         // generate a visualized puml trace using the example jdb out
@@ -147,13 +144,13 @@ class TraceVisualizerUnitTest {
         doThrow(IOException.class).when(sbw2).close();
         try (MockedStatic<Files> mf = org.mockito.Mockito.mockStatic(Files.class)) {
             mf.when(() -> Files.newBufferedWriter(any(Path.class), any(Charset.class), any(OpenOption.class))).thenReturn(sbw1);
-            TraceVisualizerTextPrinter tvtp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+            TraceVisualizerTextPrinter tvtp = new TraceVisualizerTextPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null, null);
             tvtp.setLogger(logger);
             assertThrows(TraceVisualizerException.class, () -> tvtp.printHeader());
             assertThrows(TraceVisualizerException.class, () -> tvtp.printFooter());
             TraceNode t = new TraceNode(0, "foo", "0", 1, null);
             assertThrows(TraceVisualizerException.class, () -> tvtp.printVisualizedTraceNode(t));
-            TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+            TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null, null);
             tvpp.setLogger(logger);
             assertThrows(TraceVisualizerException.class, () -> tvpp.printHeader());
             assertThrows(TraceVisualizerException.class, () -> tvpp.printFooter());
@@ -183,7 +180,7 @@ class TraceVisualizerUnitTest {
      */
     @Test 
     void TraceVisualizeBasePrinterTest() throws IOException, TraceVisualizerException {
-        UnitTestTracePrinter uttp1 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null);
+        UnitTestTracePrinter uttp1 = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_OUT_FILENAME, null, null);
         assertDoesNotThrow(()->uttp1.printHeader());
         assertDoesNotThrow(()->uttp1.printFooter());
         TraceNode t = new TraceNode(0, "foo", "0", 1, null);
@@ -249,7 +246,6 @@ class TraceVisualizerUnitTest {
         }
         // both options are correctly specified with -g
         assertDoesNotThrow(()->TraceVisualizer.main(new String[]{"-i", "./src/test/resource/example-trace-file.txt", "-o", "output-file", "-g"}));
-        assertEquals(true, TraceVisualizer.getGenerateImage());
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
     
@@ -259,14 +255,15 @@ class TraceVisualizerUnitTest {
     @Test
     void getterSetterTest() {
         String e = EXPECTED;
-        TraceVisualizer.setInputFilename(e);
-        assertEquals(e, TraceVisualizer.getInputFilename());
-        TraceVisualizer.setOutputFilename(e);
-        assertEquals(e, TraceVisualizer.getOutputFilename());
-        TraceVisualizer.setStatsFilename(e);
-        assertEquals(e, TraceVisualizer.getStatsFilename());
-        TraceVisualizer.setGenerateImage(true);
-        assertEquals(true, TraceVisualizer.getGenerateImage());
+        TraceVisualizer tv = new TraceVisualizer();
+        tv.setInputFilename(e);
+        assertEquals(e, tv.getInputFilename());
+        tv.setOutputFilename(e);
+        assertEquals(e, tv.getOutputFilename());
+        tv.setStatsFilename(e);
+        assertEquals(e, tv.getStatsFilename());
+        tv.setGenerateImage(true);
+        assertEquals(true, tv.getGenerateImage());
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 }

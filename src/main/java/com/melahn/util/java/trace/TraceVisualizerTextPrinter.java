@@ -8,21 +8,12 @@ import java.util.List;
 public class TraceVisualizerTextPrinter extends TraceVisualizerBasePrinter implements TraceVisualizerPrinter {
 
     /**
-     * Constructor with stats file name.
+     * Constructor.
      * 
      * @throws TraceVisualizerException when an error occurs from super
      */
     TraceVisualizerTextPrinter(String r, String v, String s, String t) throws TraceVisualizerException {
         super(r, v, s, t);
-    }
-
-    /**
-     * Constructor without stats file name.
-     * 
-     * @throws TraceVisualizerException when an error occurs from super
-     */
-    TraceVisualizerTextPrinter(String r, String v, String t) throws TraceVisualizerException {
-        super(r, v, t);
     }
 
     /**

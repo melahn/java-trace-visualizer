@@ -32,30 +32,18 @@ public abstract class TraceVisualizerBasePrinter {
      * 
      * @param r the name of the raw trace flile
      * @param v the name of the visualized trace file
-     * @param s the name of the stats file
+     * @param s the name of the stats file (may be null)
      * @param t the name of the trace thread (may be null)
      * 
      * @throws TraceVisualizerException if the constructor fails
      */
     TraceVisualizerBasePrinter(String r, String v, String s, String t) throws TraceVisualizerException {
-        setCommonProperties(r, v, t);
+        setLogger(LogManager.getLogger());
+        setRawTraceFile(r);
+        setVisualizedTraceFile(v);
         setTraceStatsFile(s);
+        setTraceThreadName(t);
         logger.debug("TraceVisualizerBasePrinter created using '{}' '{}' '{}' '{}'", r, v, s, t);
-    }
-
-    /**
-     * Constructor that accepts the trace file name, the visualized trace file name
-     * and the trace thread name.
-     * 
-     * @param r the name of the raw trace file
-     * @param v the name of the visualized trace file
-     * @param t the name of the trace thread (may be null)
-     * 
-     * @throws TraceVisualizerException if the constructor fails
-     */
-    TraceVisualizerBasePrinter(String r, String v, String t) throws TraceVisualizerException {
-        setCommonProperties(r, v, t);
-        logger.debug("TraceVisualizerBasePrinter created using '{}' '{}' '{}'", r, v, t);
     }
 
     /**
@@ -64,20 +52,6 @@ public abstract class TraceVisualizerBasePrinter {
     TraceVisualizerBasePrinter() {
         setLogger(LogManager.getLogger());
         logger.info("TraceVisualizerBasePrinter created");
-    }
-
-    /**
-     * Sets properties common to all the constructors.
-     * 
-     * @param r the name of the raw trace file
-     * @param v the name of the visualized trace file
-     * @param t the name of the trace thread
-     */
-    private void setCommonProperties(String r, String v, String t) throws TraceVisualizerException {
-        setLogger(LogManager.getLogger());
-        setRawTraceFile(r);
-        setVisualizedTraceFile(v);
-        setTraceThreadName(t);
     }
 
     /**
@@ -119,13 +93,18 @@ public abstract class TraceVisualizerBasePrinter {
     }
 
     /**
-     * Prints the collected stats.
+     * Prints the collected stats, as a csv file. Each line in the file contains the
+     * method name and the number of times the method was called, separated by a
+     * comma.
      * 
      * @throws TraceVisualizerException if the stats could not be printed
      */
     public void printTraceStats() throws TraceVisualizerException {
         try {
             if (traceStatsFileWriter != null) {
+                for (Map.Entry<String, Integer> e : traceStats.entrySet()) {
+                    traceStatsFileWriter.write(e.getKey().concat(",").concat(e.getValue().toString()).concat("\n"));
+                }
                 traceStatsFileWriter.close();
                 logger.debug("Trace Stats Printed");
             }
@@ -151,14 +130,16 @@ public abstract class TraceVisualizerBasePrinter {
     /**
      * Sets the name of the trace stats file which causes a writer to be created.
      * 
-     * @param s the trace stats file name
+     * @param s the trace stats file name (may be null)
      * @throws TraceVisualizerException if a writer cannot be obtained
      */
     public void setTraceStatsFile(String s) throws TraceVisualizerException {
-        try {
-            traceStatsFileWriter = Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new TraceVisualizerException("Error creating Stats Trace File ".concat(s));
+        if (s != null) {
+            try {
+                traceStatsFileWriter = Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                throw new TraceVisualizerException("Error creating Stats Trace File ".concat(s));
+            }
         }
     }
 
@@ -227,7 +208,8 @@ public abstract class TraceVisualizerBasePrinter {
      * @return the number of calls to m, so far collected
      */
     protected Integer collectTraceStats(String m) {
-        return traceStats.get(m) == null?traceStats.put(m, 1):traceStats.replace(m, traceStats.get(m) + 1);
+        logger.debug("collect stats for {}", m);
+        return traceStats.get(m) == null ? traceStats.put(m, 1) : traceStats.replace(m, traceStats.get(m) + 1);
     }
 
     /**
