@@ -42,7 +42,7 @@ Flags:
     * The name of the output file to be created to hold generated statistics. This is a csv file.
   * **-g**
     * Generate image. Whenever specified, an image file is generated from the PlantUML file.  This is only applicable if
-      the filename of the generated output file has the extension 'puml'. The name given the image file is the name of the output trace visualization file except it will have the extension 'png'.
+      the filename of the generated output trace visualization file has the extension 'puml'. The name given the image file is the name of the output trace visualization file except it will have the extension 'png'.
   * **-h**
     * Help. Whenever specified, any other parameters are ignored.  When no parameters are specified, **-h** is assumed.
 
