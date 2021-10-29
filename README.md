@@ -46,15 +46,25 @@ Flags:
   * **-h**
     * Help. Whenever specified, any other parameters are ignored.  When no parameters are specified, **-h** is assumed.
 
+### Examples
+
 #### Example Commands
 
-##### Generating a Trace Visualization as an ascii text file
+##### Generating a Trace Visualization as an Ascii Text File
 
 ``` java
 java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.txt 
 ```
 
-### Example Text File Output
+##### Generating a Trace Visualization as a PlantUML File with an Accompanying Image File
+
+``` java
+java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.puml -g 
+```
+
+#### Example Output
+
+##### Example Text File Output
 
 ``` text
  thread: main 
@@ -84,10 +94,10 @@ java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.txt
 Generated on 2021/10/25 16:23:57 by com.melahn.util.java.trace.TraceVisualizerTextPrinter (https://github.com/melahn/java-trace-visualizer)
 ```
 
-### Example Image Output
+##### Example Image Output
 ![Image generated from PlantUML](./resource/example/example-single-thread-trace-file.png)
 
-### Example PlantUML File Output
+##### Example PlantUML File Output
 
 ``` text
 @startuml Java Trace
