@@ -96,9 +96,9 @@ public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter i
                     Path s = Paths.get(l.get(0).getPngFile().toString());
                     Path t = Paths.get(Paths.get(f).toAbsolutePath().toString().replace("puml", "png"));
                     Files.move(s, t);
-                    logger.debug("Image file {} generated from {}", s, t);
+                    logger.debug("Image file {} generated from {}", t, s);
                 } else {
-                    logger.debug("Warning: Image file {} was not generated from ", f);
+                    logger.debug("Warning: Image file was not generated from {}", f);
                 }
             } else {
                 logger.error("Error in net.sourceforge.plantuml.GeneratedImage trying to generate image from {}", f);
