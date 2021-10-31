@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.spy;
 
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -101,9 +103,7 @@ class TraceVisualizerUnitTest {
         assertDoesNotThrow(()->TraceVisualizer.main(a2));
         assertTrue(Files.exists(Paths.get(TEST_PUML_FILENAME)));
         // generate a png from the puml file 
-        if (Files.exists(Paths.get(TEST_PNG_FILENAME))) {
-            Files.delete(Paths.get(TEST_PNG_FILENAME));
-        }
+        TraceVisualizerTestUtil.deleteFile(TEST_PNG_FILENAME);
         String[] a3 = new String[]{"-i", EXAMPLE_JDB_OUT_FILENAME, "-o", TEST_PUML_FILENAME, "-g"};
         assertDoesNotThrow(()->TraceVisualizer.main(a3));
         assertTrue(Files.exists(Paths.get(TEST_PUML_FILENAME)));
@@ -159,7 +159,7 @@ class TraceVisualizerUnitTest {
             assertThrows(TraceVisualizerException.class, () -> tvtp.printFooter());
             TraceNode t = new TraceNode(0, "foo", "0", 1, null);
             assertThrows(TraceVisualizerException.class, () -> tvtp.printVisualizedTraceNode(t));
-            TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_TEXT_FILENAME, null, null);
+            TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_PUML_FILENAME, null, null);
             tvpp.setLogger(logger);
             assertThrows(TraceVisualizerException.class, () -> tvpp.printHeader());
             assertThrows(TraceVisualizerException.class, () -> tvpp.printFooter());
@@ -178,6 +178,45 @@ class TraceVisualizerUnitTest {
             assertThrows(TraceVisualizerException.class, () -> uttp3.setTraceStatsFile(TEST_STATS_FILENAME));
             assertThrows(TraceVisualizerException.class, () -> uttp3.setVisualizedTraceFile(TEST_TEXT_FILENAME));
         }
+        System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
+    }
+
+    /**
+     * Tests the method that prints images
+     * 
+     * @throws IOException
+     * @throws TraceVisualizerException
+     */
+    @Test
+    void imagePrintTest () throws IOException, TraceVisualizerException {
+        // test the normal case where an image is successfuky generated from a PlantUML file
+        TraceVisualizerTestUtil.deleteFile(TEST_PUML_FILENAME);
+        TraceVisualizerTestUtil.deleteFile(TEST_PNG_FILENAME);
+        TraceVisualizerPlantUMLPrinter tvpp = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_PUML_FILENAME, null, null);
+        tvpp.processRawTraceFile();
+        tvpp.printImage();
+        assertTrue(Files.exists(Paths.get(TEST_PUML_FILENAME)));
+        assertTrue(Files.exists(Paths.get(TEST_PNG_FILENAME)));
+        // test that the base printer throws a TraceVisualizerException since it doesn't know how to print an image
+        UnitTestTracePrinter uttp = new UnitTestTracePrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_PUML_FILENAME, null, null);
+        uttp.processRawTraceFile();
+        assertThrows(TraceVisualizerException.class, () -> uttp.printImage());
+        TraceVisualizerTestUtil.deleteFile(TEST_PUML_FILENAME);
+        TraceVisualizerTestUtil.deleteFile(TEST_PNG_FILENAME);
+        TraceVisualizerPlantUMLPrinter tvpp2 = new TraceVisualizerPlantUMLPrinter(EXAMPLE_JDB_OUT_FILENAME, TEST_PUML_FILENAME, null, null);
+        // test for the case where net.sourceforge.plantuml.SourceFileReader returns an empty list of images
+        net.sourceforge.plantuml.SourceFileReader sfr = new net.sourceforge.plantuml.SourceFileReader(Paths.get(TEST_PUML_FILENAME).toAbsolutePath().toFile());
+        net.sourceforge.plantuml.SourceFileReader ssfr = spy(sfr);
+        doReturn(new ArrayList<net.sourceforge.plantuml.GeneratedImage>()).when(ssfr).getGeneratedImages();
+        TraceVisualizerPlantUMLPrinter stvpp2 = spy(tvpp2);
+        doReturn(ssfr).when(stvpp2).getSourceFileReader(anyString());
+        assertThrows(TraceVisualizerException.class, () -> stvpp2.printImage());
+        // using the spies, test for the case where net.sourceforge.plantuml.SourceFileReader returns an error
+        doReturn(true).when(ssfr).hasError();
+        assertThrows(TraceVisualizerException.class, () -> stvpp2.printImage());
+        // finally, using the same TraceVisualizerPlantUMLPrinter spy, force an IOException which gets translated to a TraceVisualizerException
+        doThrow(IOException.class).when(stvpp2).getSourceFileReader(anyString());
+        assertThrows(TraceVisualizerException.class, () -> stvpp2.printImage());
         System.out.println(new Throwable().getStackTrace()[0].getMethodName().concat(" completed"));
     }
 

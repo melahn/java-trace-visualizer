@@ -17,11 +17,14 @@ public abstract class TraceVisualizerBasePrinter {
     int depth = 1;
     Logger logger = LogManager.getLogger();
     TraceNode parent = null;
+    String rawTraceFilename = null;
     BufferedReader rawTraceFileReader = null;
     Map<Integer, TraceNode> traceNodes = new LinkedHashMap<>();
     Map<String, Integer> traceStats = new HashMap<>();
+    String traceStatsFilename = null;
     BufferedWriter traceStatsFileWriter = null;
     String traceThreadName = null;
+    String visualizedTraceFilename = null;
     BufferedWriter visualizedTraceFileWriter = null;
     static final int INDENT_INCREMENT = 5;
     public static final String DEFAULT_THREAD_NAME = "main";
@@ -121,10 +124,9 @@ public abstract class TraceVisualizerBasePrinter {
     /**
      * Handles the primtImage method by throwing an exception.
      * 
-     * @param f the name of the file for whih an image is requested
      * @throws TraceVisualizerException
      */
-    public void printImage(String f) throws TraceVisualizerException {
+    public void printImage() throws TraceVisualizerException {
         logger.debug("{} does not know how to print an image", this.getClass().getName());
         throw new TraceVisualizerException(String.format("%s does not know how to print an image", this.getClass().getName()));
     }
@@ -132,14 +134,15 @@ public abstract class TraceVisualizerBasePrinter {
     /**
      * Sets the name of the raw trace file which causes a reader to be created.
      * 
-     * @param t the raw trace file name
+     * @param r the raw trace file name
      * @throws TraceVisualizerException if a reader cannot be obtained
      */
-    public void setRawTraceFile(String t) throws TraceVisualizerException {
+    public void setRawTraceFile(String r) throws TraceVisualizerException {
+        rawTraceFilename = r;
         try {
-            rawTraceFileReader = Files.newBufferedReader(Paths.get(t));
+            rawTraceFileReader = Files.newBufferedReader(Paths.get(r));
         } catch (IOException e) {
-            throw new TraceVisualizerException("Error creating reader for trace file ".concat(t));
+            throw new TraceVisualizerException("Error creating reader for trace file ".concat(r));
         }
     }
 
@@ -150,6 +153,7 @@ public abstract class TraceVisualizerBasePrinter {
      * @throws TraceVisualizerException if a writer cannot be obtained
      */
     public void setTraceStatsFile(String s) throws TraceVisualizerException {
+        traceStatsFilename = s;
         if (s != null) {
             try {
                 traceStatsFileWriter = Files.newBufferedWriter(Paths.get(s), StandardCharsets.UTF_8);
@@ -167,6 +171,7 @@ public abstract class TraceVisualizerBasePrinter {
      * @throws TraceVisualizerException if a writer cannot be obtained
      */
     public void setVisualizedTraceFile(String v) throws TraceVisualizerException {
+        visualizedTraceFilename = v;
         try {
             visualizedTraceFileWriter = Files.newBufferedWriter(Paths.get(v), StandardCharsets.UTF_8);
         } catch (IOException e) {
@@ -274,8 +279,9 @@ public abstract class TraceVisualizerBasePrinter {
      * 
      * @param l logger
      */
-    protected void setLogger(Logger l) {
+    public void setLogger(Logger l) {
         logger = l;
         logger.debug("logger set to {} ", l);
     }
+
 }

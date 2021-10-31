@@ -7,6 +7,7 @@ import java.lang.ProcessBuilder.Redirect;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -18,9 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 public class TraceVisualizerTestUtil {
-
 
     /**
      * Answers true if the log contains a particular entry.
@@ -74,6 +73,17 @@ public class TraceVisualizerTestUtil {
             } catch (IOException e) {
                 System.out.println("Error walking directory: " + d);
             }
+        }
+    }
+
+    /**
+     * Delete file if it exists.
+     * 
+     * @param f name of file to delete
+     */
+    public static void deleteFile(String f) throws IOException {
+        if (Files.exists(Paths.get(f))) {
+            Files.delete(Paths.get(f));
         }
     }
 
@@ -134,10 +144,10 @@ public class TraceVisualizerTestUtil {
     }
 
     /**
-     * Returns a randomly generated string. 
+     * Returns a randomly generated string.
      * 
-     * @param c the number of characters in the string you want. If
-     *          invalid (less than or equal to 0) 10 is used
+     * @param c the number of characters in the string you want. If invalid (less
+     *          than or equal to 0) 10 is used
      * @return the generated String
      */
     public static String generateRandomString(int c) {
@@ -157,4 +167,3 @@ public class TraceVisualizerTestUtil {
         return "java-trace-visualizer-".concat(properties.getProperty("shaded.jar.version")).concat(".jar");
     }
 }
-

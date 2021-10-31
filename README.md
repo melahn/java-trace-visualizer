@@ -95,6 +95,7 @@ Generated on 2021/10/25 16:23:57 by com.melahn.util.java.trace.TraceVisualizerTe
 ```
 
 ##### Example Image Output
+
 ![Image generated from PlantUML](./resource/example/example-single-thread-trace-file.png)
 
 ##### Example PlantUML File Output

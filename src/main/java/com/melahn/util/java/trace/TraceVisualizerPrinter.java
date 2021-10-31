@@ -4,7 +4,7 @@ public interface TraceVisualizerPrinter {
 
     public void printHeader() throws TraceVisualizerException;
 
-    public void printImage(String f) throws TraceVisualizerException;
+    public void printImage() throws TraceVisualizerException;
 
     public void printFooter() throws TraceVisualizerException;
 

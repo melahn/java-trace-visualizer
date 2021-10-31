@@ -28,7 +28,7 @@ public class TraceVisualizer {
                 tvp.processRawTraceFile();
                 tvp.printTraceStats();
                 if (tv.generateImage) {
-                    tvp.printImage(tv.outputFilename);
+                    tvp.printImage();
                 }
             }
         } catch (TraceVisualizerException e) {

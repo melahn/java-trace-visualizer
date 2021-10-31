@@ -81,31 +81,46 @@ public class TraceVisualizerPlantUMLPrinter extends TraceVisualizerBasePrinter i
     }
 
     /**
-     * Generates an image from a PUML file
+     * Generates an image from the visualized trace file.
      * 
-     * @param f the name of the Plant UML file
      * @throws TraceVisualizerException if an error occurred generaing the image
      */
     @Override
-    public void printImage(String f) throws TraceVisualizerException {
+    public void printImage() throws TraceVisualizerException {
         try {
-            net.sourceforge.plantuml.SourceFileReader r = new net.sourceforge.plantuml.SourceFileReader(Paths.get(f).toAbsolutePath().toFile());
+            net.sourceforge.plantuml.SourceFileReader r = getSourceFileReader(visualizedTraceFilename);
             if (!r.hasError()) {
                 List<net.sourceforge.plantuml.GeneratedImage> l = r.getGeneratedImages();
                 if (!l.isEmpty()) {
                     Path s = Paths.get(l.get(0).getPngFile().toString());
-                    Path t = Paths.get(Paths.get(f).toAbsolutePath().toString().replace("puml", "png"));
+                    Path t = Paths.get(Paths.get(visualizedTraceFilename).toAbsolutePath().toString().replace("puml", "png"));
                     Files.move(s, t);
-                    logger.debug("Image file {} generated from {}", t, s);
+                    logger.debug("Image file {} generated from {}", t, visualizedTraceFilename);
                 } else {
-                    logger.debug("Warning: Image file was not generated from {}", f);
+                    String m = String.format("net.sourceforge.plantuml.GeneratedImage did not generate an image from %s", visualizedTraceFilename);
+                    logger.debug(m);
+                    throw new TraceVisualizerException(m);
                 }
             } else {
-                logger.error("Error in net.sourceforge.plantuml.GeneratedImage trying to generate image from {}", f);
+                String m = String.format("Error reported by net.sourceforge.plantuml.GeneratedImage trying to generate image from %s", visualizedTraceFilename);
+                logger.error(m);
+                throw new TraceVisualizerException(m);
             }
         } catch (IOException e) {
-            logger.error("IOException in net.sourceforge.plantuml.GeneratedImage trying to generate image from {}", f);
+            logger.error("IOException in net.sourceforge.plantuml.GeneratedImage trying to generate image from {}", visualizedTraceFilename);
             throw new TraceVisualizerException(e.getMessage());
         }
     }
+    /**
+     * Gets a SourceFileReader for a PlantUML file.  This is separated as a function to permit
+     * mocking for complete error case testing.
+     * 
+     * @param f the name of the PlantUML file
+     * @return a SourceFileReader
+     * @throws IOException when an error occurs getting the SourceFileReader
+     */
+    protected net.sourceforge.plantuml.SourceFileReader getSourceFileReader(String f) throws IOException {
+        return new net.sourceforge.plantuml.SourceFileReader(Paths.get(f).toAbsolutePath().toFile());
+    }
+
 }
