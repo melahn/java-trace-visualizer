@@ -25,7 +25,7 @@ The project introduces a *TraceVisualizer* class whose job it is to collect the 
 
 The actual printing is done by two subclasses *TraceVisualizerTextPrinter* and *TraceVisualizerPlantUMLPrinter*. *TraceVisualizerTextPrinter* generates an easy-to-read ascii text tree view showing method invocations and line numbers for the methods called. *TraceVisualizerPlantUMLPrinter* provides a similar view, except it uses PlantUML as an intermediate form, from which an image is generated. For more information about PlantUML, see [PlantUML](http://plantuml.com/).
 
-The generated statistics include just the method name and the number of times the methid was called, as a csv file.
+The generated statistics include just the method name and the number of times the method was called, as a csv file.
 
 All the classes are packaged in a shaded jar that contains all the dependencies needed. The jar is a snapshot version for now. Before I publish the artifact to a central repository, I will create Version 1.0.0.
 
