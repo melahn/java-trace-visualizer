@@ -29,7 +29,7 @@ The generated statistics include just the method name and the number of times th
 
 All the classes are packaged in a shaded jar that contains all the dependencies needed. The jar is a snapshot version for now. Before I publish the artifact to a central repository, I will create Version 1.0.0.
 
-At the moment, the generated visualization does not take into account multiple Java threads, though that information may be present in the jdb trace file. The project includes some stub code that will be expanded in a future version to at least allow the user to select which thread is of interest. Also, in a future version, I will add support for dynamic tree views using JavaScript.
+At the moment, the generated visualization does not take into account multiple Java threads, though that information is present in the jdb trace file. The project includes some stub code that will be expanded in a future version to at least allow the user to select which thread is of interest. Also, in a future version, I will add support for dynamic tree views using JavaScript.
 
 The code has complete test coverage as measured by [Sonar Cloud](https://sonarcloud.io/dashboard?id=melahn_java-trace-visualizer). Continuous integration (CI) is provided by a [GitHub Build Action](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml).
 
