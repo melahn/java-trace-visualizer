@@ -57,10 +57,27 @@
             </plugin>
         </plugins>
     </reporting>
+    <profiles>
+        <!-- 
+            This profile assures that the compiler does not include any api calls that require java 9 
+            or later. 
+        -->
+        <profile>
+            <id>java-8</id>
+            <activation>
+              <jdk>[9,)</jdk>
+            </activation>
+            <properties>
+              <maven.compiler.release>8</maven.compiler.release>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <resources>
             <resource>
-              <!--used to extract the project version to derive the name of the shaded jar for integration-tests-->
+              <!--
+                  This is used to extract the project version to derive the name of the shaded jar for integration-tests
+              -->
               <directory>src/main/resources/resources-filtered</directory>
               <filtering>true</filtering>
             </resource>
@@ -117,6 +134,8 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Enable signing later before publishing the artifact to maven centrl -->
+            
             <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -246,18 +265,37 @@
                 <version>3.8.1</version>
                 <configuration>
                     <!-- 
-                        Specifying release should be sufficient but specifying source is also needed because of a JDK bug that causes
-                        the javadoc plugin to fail. See https://bugs.openjdk.java.net/browse/JDK-8217177 
-                        Note that this is fixed in Java 13.
-                        Note that adding source to the javadoc plugin configuration is not sufficient
+                        Target java 1.8 source and target. Note that this only assures
+                        the *format* of the source and class files are java 8. To also
+                        be sure thst the class file does not use a java 9 or later 
+                        method, the build profile 'java-8' defined above is used.
                     -->
                     <source>8</source>
-                    <release>8</release>
+                    <target>8</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                     <optimize>true</optimize>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
                 </configuration>
+            </plugin>
+            <!-- 
+               Show which profile is in use to make sure the java-8 one above is 
+               picked up
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-help-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <?m2e execute onConfiguration?>
+                        <id>show-profiles</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>active-profiles</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <!-- 
                 Generate Plantuml diagrams on configuration change and also on 
