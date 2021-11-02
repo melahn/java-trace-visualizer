@@ -14,22 +14,22 @@ Java 8 or later.
 ## Goals
 
 * Make a single threaded jdb trace output easier to understand
-* Allow the user to visualize the trace in different ways including a simple ascii text tree view and a PlantUML tree view
+* Allow the user to visualize the trace in different ways including as a simple ascii text tree view and as a PlantUML tree view
 * Generate some simple statistics derived from information in the trace
 
 ## Description and Architecture
 
 This project grew out of my need to better understand the flow of some source code I had written several years ago, as I was trying to optimize the code.  While the [Java Debugger](https://docs.oracle.com/javase/8/docs/technotes/tools/windows/jdb.html) generates a lot of information about the code flow, it was not easy for me to see the overall 'shape' of the flow so I could spot areas for improvement. I created this project to help me.  
 
-The project introduces a *TraceVisualizer* class whose job it is to collect the command line parameters and then enlist a *TraceVisualizerPrinter* accomplish the goal of producing the visualization and statistics files. The *TraceVisualizerPrinter* is an interface that has several implementations. *TraceVisualizerBasePrinter* is an abstract class that handles the details of parsing the jdb trace file and reducing it to a *LinkedHashMap* and gathering simple statistics.
+The project introduces a *TraceVisualizer* class whose job it is to collect the command line parameters and then enlist a *TraceVisualizerPrinter* to accomplish the goal of producing the visualization and statistics files. The *TraceVisualizerPrinter* is an interface that has several implementations. *TraceVisualizerBasePrinter* is an abstract class that handles the details of parsing the jdb trace file and reducing it to a *LinkedHashMap* and gathering simple statistics.
 
 The actual printing is done by two subclasses *TraceVisualizerTextPrinter* and *TraceVisualizerPlantUMLPrinter*. *TraceVisualizerTextPrinter* generates an easy-to-read ascii text tree view showing method invocations and line numbers for the methods called. *TraceVisualizerPlantUMLPrinter* provides a similar view, except it uses PlantUML as an intermediate form, from which an image is generated. For more information about PlantUML, see [PlantUML](http://plantuml.com/).
 
-The generated statistics include just the method name and the number of times the methid was called, as a csv file.
+The generated statistics include just the method name and the number of times the method was called, as a csv file.
 
 All the classes are packaged in a shaded jar that contains all the dependencies needed. The jar is a snapshot version for now. Before I publish the artifact to a central repository, I will create Version 1.0.0.
 
-At the moment, the generated visualization does not take into account multiple Java threads, though that information may be present in the jdb trace file. The project includes some stub code that will be expanded in a future version to at least allow the user to select which thread is of interest. Also, in a future version, I will add support for dynamic tree views using JavaScript.
+At the moment, the generated visualization does not take into account multiple Java threads, though that information is present in the jdb trace file. The project includes some stub code that will be expanded in a future version to at least allow the user to select which thread is of interest. Also, in a future version, I will add support for dynamic tree views using JavaScript.
 
 The code has complete test coverage as measured by [Sonar Cloud](https://sonarcloud.io/dashboard?id=melahn_java-trace-visualizer). Continuous integration (CI) is provided by a [GitHub Build Action](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml).
 
