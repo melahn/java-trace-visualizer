@@ -135,7 +135,7 @@
                 </executions>
             </plugin>
             <!-- Enable signing later before publishing the artifact to maven centrl -->
-            
+
             <!--plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
@@ -246,6 +246,9 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <configuration>
+                                <minimizeJar>true</minimizeJar>
+                              </configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
@@ -267,8 +270,8 @@
                     <!-- 
                         Target java 1.8 source and target. Note that this only assures
                         the *format* of the source and class files are java 8. To also
-                        be sure thst the class file does not use a java 9 or later 
-                        method, the build profile 'java-8' defined above is used.
+                        be sure thst the class file does not use API's from java 9 or  
+                        later, the build profile 'java-8' defined above is used.
                     -->
                     <source>8</source>
                     <target>8</target>
