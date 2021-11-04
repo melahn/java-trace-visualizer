@@ -229,15 +229,114 @@
                 <configuration>
                     <filters>
                         <filter>
-                            <artifact>*:*</artifact>
+                            <artifact>org.apache.httpcomponents:*:*:*</artifact>
                             <excludes>
-                                <exclude>module-info.class</exclude>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>commons-cli:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.apache.commons:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>commons-lang:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>commons-logging:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.apache.logging.log4j:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.apache.commons:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.sonarsource.scanner.api:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.sonarsource.scanner.maven:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>commons-codec:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>net.sourceforge.plantuml:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.sonatype.plexus:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>org.codehaus.plexus:*:*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/MANIFEST.MF</exclude>>
                             </excludes>
                         </filter>
                     </filters>
+                    <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <manifestEntries>
+                                <Main-Class>com.melahn.util.java.trace.TraceVisualizer</Main-Class>
+                                <Build-Number>${buildNumber}</Build-Number>
+                                <Multi-Release>true</Multi-Release>
+                            </manifestEntries>
+                        </transformer>
+                        <!--
+                            Aggregate license files
+                        -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+                        <!--
+                            Aggregate Notice files
+                        -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+                            <addHeader>false</addHeader>
+                        </transformer>
+                        <!--
+                            Aggregate META-INF/plexus/components.xml
+                        -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer"/>
+                        <!--
+                            Aggregate META-INF/DEPENDENCIES
+                        -->
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/DEPENDENCIES</resource>
+                          </transformer>
+                    </transformers>
+                    <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>
                     <execution>
@@ -245,40 +344,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <configuration>
-                                <minimizeJar>true</minimizeJar>
-                              </configuration>
-                            <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>com.melahn.util.java.trace.TraceVisualizer</Main-Class>
-                                        <Build-Number>${buildNumber}</Build-Number>
-                                        <Multi-Release>true</Multi-Release>
-                                    </manifestEntries>
-                                </transformer>
-                                <!--
-                                    Aggregate license files
-                                -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
-                                <!--
-                                    Aggregate Notice files
-                                -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
-                                    <addHeader>false</addHeader>
-                                </transformer>
-                                <!--
-                                    Aggregate META-INF/plexus/components.xml
-                                -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer"/>
-                                <!--
-                                    Aggregate META-INF/DEPENDENCIES
-                                -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-                                    <resource>META-INF/DEPENDENCIES</resource>
-                                  </transformer>
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -456,11 +521,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20210307</version>
         </dependency>
         <dependency>
             <groupId>net.sourceforge.plantuml</groupId>
