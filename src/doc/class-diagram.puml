@@ -1,20 +1,10 @@
-@startuml class-diagram
+@startuml
 ' Created by juanmf@gmail.com
 
 ' Using left to right direction to try a better layout feel free to edit
 left to right direction
 ' Participants 
 
-interface com.melahn.util.java.trace.TraceVisualizerPrinter {
---
-+  printFooter()  : void
-+  printHeader()  : void
-+  printImage()  : void
-+  printTraceStats()  : void
-+  printVisualizedTraceNode(c TraceNode)  : void
-+  processRawTraceFile()  : void
-
-}
 class com.melahn.util.java.trace.TraceNode {
 ~  children :  Set< TraceNode>
 ~  depth : int
@@ -28,12 +18,49 @@ class com.melahn.util.java.trace.TraceNode {
 ~  getUnprintedAncestors()  :  List
 
 }
+class com.melahn.util.java.trace.TraceVisualizerTextPrinter {
+--
+~   TraceVisualizerTextPrinter(c String, c String, c String, c String) 
+#  printVertices(c TraceNode)  : void
++  printFooter()  : void
++  printHeader()  : void
++  printVisualizedTraceNode(c TraceNode)  : void
+
+}
+class com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter {
+-  INDENT : c String
+--
+~   TraceVisualizerPlantUMLPrinter(c String, c String, c String, c String) 
+#  getSourceFileReader(c String)  :  SourceFileReader
++  printFooter()  : void
++  printHeader()  : void
++  printImage()  : void
++  printVisualizedTraceNode(c TraceNode)  : void
+
+}
+interface com.melahn.util.java.trace.TraceVisualizerPrinter {
+--
++  printFooter()  : void
++  printHeader()  : void
++  printImage()  : void
++  printTraceStats()  : void
++  printVisualizedTraceNode(c TraceNode)  : void
++  processRawTraceFile()  : void
+
+}
+class com.melahn.util.java.trace.TraceVisualizerException {
+~  serialVersionUID : long
+--
++   TraceVisualizerException(c String) 
+
+}
 class com.melahn.util.java.trace.TraceVisualizer {
 -  generateImage : boolean
 -  inputFilename : c String
 -  logger : i Logger
 -  outputFilename : c String
 -  statsFilename : c String
+~  tvp : i TraceVisualizerPrinter
 --
 ~   TraceVisualizer() 
 +  getGenerateImage()  : boolean
@@ -87,46 +114,21 @@ class com.melahn.util.java.trace.TraceVisualizerBasePrinter {
 -  printVisualizedTraceFile()  : void
 
 }
-class com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter {
--  INDENT : c String
---
-~   TraceVisualizerPlantUMLPrinter(c String, c String, c String, c String) 
-#  getSourceFileReader(c String)  :  SourceFileReader
-+  printFooter()  : void
-+  printHeader()  : void
-+  printImage()  : void
-+  printVisualizedTraceNode(c TraceNode)  : void
-
-}
-class com.melahn.util.java.trace.TraceVisualizerTextPrinter {
---
-~   TraceVisualizerTextPrinter(c String, c String, c String, c String) 
-#  printVertices(c TraceNode)  : void
-+  printFooter()  : void
-+  printHeader()  : void
-+  printVisualizedTraceNode(c TraceNode)  : void
-
-}
-class com.melahn.util.java.trace.TraceVisualizerException {
-~  serialVersionUID : long
---
-+   TraceVisualizerException(c String) 
-
-}
 
 ' Relations 
 
-com.melahn.util.java.trace.TraceVisualizer "1"  o-left-  "1" org.apache.logging.log4j.Logger  : logger: i Logger
-com.melahn.util.java.trace.TraceNode "1"  o-left-  "1" com.melahn.util.java.trace.TraceNode  : parent: c TraceNode
-com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-left-  "1" com.melahn.util.java.trace.TraceNode  
+com.melahn.util.java.trace.TraceVisualizer "1"  o-left-  "1" com.melahn.util.java.trace.TraceVisualizerPrinter  : tvp: i TraceVisualizerPrinter
 com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-left-  "1" org.apache.logging.log4j.Logger  : logger: i Logger
-com.melahn.util.java.trace.TraceVisualizerTextPrinter  -up|>  com.melahn.util.java.trace.TraceVisualizerBasePrinter
+com.melahn.util.java.trace.TraceNode "1"  o-left-  "1" com.melahn.util.java.trace.TraceNode  : parent: c TraceNode
+com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-left-  "1" com.melahn.util.java.trace.TraceNode  : parent: c TraceNode
+com.melahn.util.java.trace.TraceVisualizer "1"  o-left-  "1" org.apache.logging.log4j.Logger  : logger: i Logger
 com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter  -up|>  com.melahn.util.java.trace.TraceVisualizerBasePrinter
-com.melahn.util.java.trace.TraceVisualizerTextPrinter  ..up|>  com.melahn.util.java.trace.TraceVisualizerPrinter
+com.melahn.util.java.trace.TraceVisualizerTextPrinter  -up|>  com.melahn.util.java.trace.TraceVisualizerBasePrinter
 com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter  ..up|>  com.melahn.util.java.trace.TraceVisualizerPrinter
+com.melahn.util.java.trace.TraceVisualizerTextPrinter  ..up|>  com.melahn.util.java.trace.TraceVisualizerPrinter
 
 ' Notes 
 
-center footer Generated on 2021/11/14 09:38:29 
+center footer Generated on 2021/11/14 13:33:09 
 
 @enduml
