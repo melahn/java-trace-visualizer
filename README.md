@@ -33,6 +33,10 @@ At the moment, the generated visualization does not take into account multiple J
 
 The code has complete test coverage as measured by [Sonar Cloud](https://sonarcloud.io/dashboard?id=melahn_java-trace-visualizer). Continuous integration (CI) is provided by a [GitHub Build Action](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml).
 
+### Class Diagram
+
+![Class Diagram](./doc/generated/class-diagram.png)
+
 ## Usage
 
 ### Command Line Syntax
