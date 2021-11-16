@@ -1,7 +1,5 @@
-@startuml
-' Created by juanmf@gmail.com
+@startuml class-diagram
 
-' Using left to right direction to try a better layout feel free to edit
 left to right direction
 ' Participants 
 
@@ -16,6 +14,47 @@ class com.melahn.util.java.trace.TraceNode {
 --
 ~   TraceNode(int, c String, c String, int, c TraceNode) 
 ~  getUnprintedAncestors()  :  List
+
+}
+class com.melahn.util.java.trace.TraceVisualizerException {
+~  serialVersionUID : long
+--
++   TraceVisualizerException(c String) 
+
+}
+interface com.melahn.util.java.trace.TraceVisualizerPrinter {
+--
++  printFooter()  : void
++  printHeader()  : void
++  printImage()  : void
++  printTraceStats()  : void
++  printVisualizedTraceNode(c TraceNode)  : void
++  processRawTraceFile()  : void
+
+}
+class com.melahn.util.java.trace.TraceVisualizer {
+-  generateImage : boolean
+-  inputFilename : c String
+-  logger : i Logger
+-  outputFilename : c String
+-  printer : i TraceVisualizerPrinter
+-  statsFilename : c String
+--
+~   TraceVisualizer() 
++  getGenerateImage()  : boolean
++  getInputFilename()  :  String
++  getOutputFilename()  :  String
++  getStatsFilename()  :  String
++  main(c String;)  : void
++  setGenerateImage(boolean)  : void
++  setInputFilename(c String)  : void
++  setOutputFilename(c String)  : void
++  setStatsFilename(c String)  : void
+-  getHelp()  :  String
+-  parseArgs(c String;)  : boolean
+-  parseOptions(c CommandLine)  : int
+-  parseSwitches(c CommandLine)  : void
+-  setOptions()  :  Options
 
 }
 class com.melahn.util.java.trace.TraceVisualizerTextPrinter {
@@ -38,53 +77,12 @@ class com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter {
 +  printVisualizedTraceNode(c TraceNode)  : void
 
 }
-interface com.melahn.util.java.trace.TraceVisualizerPrinter {
---
-+  printFooter()  : void
-+  printHeader()  : void
-+  printImage()  : void
-+  printTraceStats()  : void
-+  printVisualizedTraceNode(c TraceNode)  : void
-+  processRawTraceFile()  : void
-
-}
-class com.melahn.util.java.trace.TraceVisualizerException {
-~  serialVersionUID : long
---
-+   TraceVisualizerException(c String) 
-
-}
-class com.melahn.util.java.trace.TraceVisualizer {
--  generateImage : boolean
--  inputFilename : c String
--  logger : i Logger
--  outputFilename : c String
--  statsFilename : c String
-~  tvp : i TraceVisualizerPrinter
---
-~   TraceVisualizer() 
-+  getGenerateImage()  : boolean
-+  getInputFilename()  :  String
-+  getOutputFilename()  :  String
-+  getStatsFilename()  :  String
-+  main(c String;)  : void
-+  setGenerateImage(boolean)  : void
-+  setInputFilename(c String)  : void
-+  setOutputFilename(c String)  : void
-+  setStatsFilename(c String)  : void
--  getHelp()  :  String
--  parseArgs(c String;)  : boolean
--  parseOptions(c CommandLine)  : int
--  parseSwitches(c CommandLine)  : void
--  setOptions()  :  Options
-
-}
 class com.melahn.util.java.trace.TraceVisualizerBasePrinter {
-+  DEFAULT_THREAD_NAME : c String
+~  DEFAULT_THREAD_NAME : c String
 ~  INDENT_INCREMENT : int
+~  currentNode : c TraceNode
 ~  depth : int
 ~  logger : i Logger
-~  parent : c TraceNode
 ~  rawTraceFileReader : c BufferedReader
 ~  rawTraceFilename : c String
 ~  traceNodes :  Map< Integer, TraceNode>
@@ -117,18 +115,18 @@ class com.melahn.util.java.trace.TraceVisualizerBasePrinter {
 
 ' Relations 
 
-com.melahn.util.java.trace.TraceVisualizer "1"  o-left-  "1" com.melahn.util.java.trace.TraceVisualizerPrinter  : tvp: i TraceVisualizerPrinter
-com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-left-  "1" org.apache.logging.log4j.Logger  : logger: i Logger
+com.melahn.util.java.trace.TraceVisualizer "1"  o-left-  "1" com.melahn.util.java.trace.TraceVisualizerPrinter  : printer: i TraceVisualizerPrinter
 com.melahn.util.java.trace.TraceNode "1"  o-left-  "1" com.melahn.util.java.trace.TraceNode  : parent: c TraceNode
-com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-left-  "1" com.melahn.util.java.trace.TraceNode  : parent: c TraceNode
 com.melahn.util.java.trace.TraceVisualizer "1"  o-left-  "1" org.apache.logging.log4j.Logger  : logger: i Logger
+com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-right-  "1" com.melahn.util.java.trace.TraceNode  : currentNode: c TraceNode
+com.melahn.util.java.trace.TraceVisualizerBasePrinter "1"  o-left-  "1" org.apache.logging.log4j.Logger  : logger: i Logger
 com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter  -up|>  com.melahn.util.java.trace.TraceVisualizerBasePrinter
 com.melahn.util.java.trace.TraceVisualizerTextPrinter  -up|>  com.melahn.util.java.trace.TraceVisualizerBasePrinter
-com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter  ..up|>  com.melahn.util.java.trace.TraceVisualizerPrinter
 com.melahn.util.java.trace.TraceVisualizerTextPrinter  ..up|>  com.melahn.util.java.trace.TraceVisualizerPrinter
+com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter  ..up|>  com.melahn.util.java.trace.TraceVisualizerPrinter
 
 ' Notes 
 
-center footer Generated on 2021/11/14 13:33:09 
+center footer Generated on 2021/11/16 14:31:09 
 
 @enduml
