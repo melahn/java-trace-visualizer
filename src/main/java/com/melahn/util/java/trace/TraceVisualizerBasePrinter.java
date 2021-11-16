@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 public abstract class TraceVisualizerBasePrinter {
     int depth = 1;
     Logger logger = LogManager.getLogger();
-    TraceNode parent = null;
+    TraceNode currentNode = null;
     String rawTraceFilename = null;
     BufferedReader rawTraceFileReader = null;
     Map<Integer, TraceNode> traceNodes = new LinkedHashMap<>();
@@ -27,7 +27,7 @@ public abstract class TraceVisualizerBasePrinter {
     String visualizedTraceFilename = null;
     BufferedWriter visualizedTraceFileWriter = null;
     static final int INDENT_INCREMENT = 5;
-    public static final String DEFAULT_THREAD_NAME = "main";
+    static final String DEFAULT_THREAD_NAME = "main";
 
     /**
      * Constructor that accepts the trace file name, the visualised trace file name,
@@ -67,8 +67,8 @@ public abstract class TraceVisualizerBasePrinter {
         logger.debug("Process Raw Trace file");
         String t = "";
         int i = 0;
-        parent = new TraceNode(0, "start", "0", depth++, null);
-        traceNodes.put(0, parent);
+        currentNode = new TraceNode(0, "start", "0", depth++, null);
+        traceNodes.put(0, currentNode);
         try {
             while (t != null) {
                 t = rawTraceFileReader.readLine();
@@ -124,7 +124,7 @@ public abstract class TraceVisualizerBasePrinter {
     /**
      * Handles the primtImage method by throwing an exception.
      * 
-     * @throws TraceVisualizerException
+     * @throws TraceVisualizerException to signal that the method is a no-op
      */
     public void printImage() throws TraceVisualizerException {
         logger.debug("{} does not know how to print an image", this.getClass().getName());
@@ -210,14 +210,14 @@ public abstract class TraceVisualizerBasePrinter {
             logger.debug("enter of trace node {}", l);
             String methodName = t.substring(t.indexOf(',') + 1, t.indexOf("line") - 2);
             String lineNumber = t.substring(t.indexOf("line=") + "line=".length(), t.indexOf("bci") - 1);
-            TraceNode n = new TraceNode(l, methodName, lineNumber, depth, parent);
+            TraceNode n = new TraceNode(l, methodName, lineNumber, depth, currentNode);
             logger.debug("put trace node {} into the trace tree", l);
             traceNodes.put(l, n);
-            parent = n;
+            currentNode = n;
             depth++;
             collectTraceStats(methodName);
         } else if (t.contains("Method exited:")) {
-            parent = parent.parent;
+            currentNode = currentNode.parent;
             depth--;
         }
     }

@@ -14,6 +14,7 @@ public class TraceVisualizer {
     private static Logger logger = LogManager.getLogger(TraceVisualizer.class.getName());
     private String outputFilename = null;
     private String statsFilename = null;
+    private TraceVisualizerPrinter printer = null;
 
     TraceVisualizer() {
         /* Nothing to do here */
@@ -23,12 +24,12 @@ public class TraceVisualizer {
         try {
             TraceVisualizer tv = new TraceVisualizer();
             if (tv.parseArgs(a)) {
-                TraceVisualizerPrinter tvp = tv.outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(tv.inputFilename, tv.outputFilename, tv.statsFilename, null)
+                tv.printer = tv.outputFilename.endsWith(".puml")? new TraceVisualizerPlantUMLPrinter(tv.inputFilename, tv.outputFilename, tv.statsFilename, null)
                             : new TraceVisualizerTextPrinter(tv.inputFilename, tv.outputFilename, tv.statsFilename, null);
-                tvp.processRawTraceFile();
-                tvp.printTraceStats();
+                tv.printer.processRawTraceFile();
+                tv.printer.printTraceStats();
                 if (tv.generateImage) {
-                    tvp.printImage();
+                    tv.printer.printImage();
                 }
             }
         } catch (TraceVisualizerException e) {
