@@ -315,6 +315,7 @@
                                 <Main-Class>com.melahn.util.java.trace.TraceVisualizer</Main-Class>
                                 <Build-Number>${buildNumber}</Build-Number>
                                 <Multi-Release>true</Multi-Release>
+                                <url>${url}</url>
                             </manifestEntries>
                         </transformer>
                         <!--
