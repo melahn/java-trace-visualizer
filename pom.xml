@@ -135,9 +135,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Enable signing later before publishing the artifact to maven central -->
-
-            <!--plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.0.1</version>
@@ -148,9 +146,17 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
+                        <configuration>
+                            <gpgArguments>
+                              <gpgArgument>--pinentry-mode</gpgArgument>
+                              <gpgArgument>loopback</gpgArgument>
+                            </gpgArguments>
+                            <!-- skip until ready to publish to maven central -->
+                            <skip>true</skip>
+                        </configuration>
                     </execution>
                 </executions>
-            </plugin-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
