@@ -5,6 +5,10 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Manual build'
 jobs:
   build:
     name: Build
