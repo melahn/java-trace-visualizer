@@ -43,6 +43,85 @@
         <sonar.organization>melahn</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
+    <profiles>
+        <!-- 
+            All profiles assure that the compiler does not include any api calls that require java 9 
+            or later. 
+        -->
+        <!-- 
+          This default profile is used when building outside of 
+          GitHub actions, such as on the command line.
+    
+          It sets builder.id and build.timestamp, useful in a manifest.
+    
+          Deployment should only be done using GitHub 
+          CI/CD so no distributionManagement section
+          is defined.
+        -->
+        <profile>
+          <id>local</id>
+          <properties>
+            <builder.id>${user.name}</builder.id>
+            <maven.compiler.release>8</maven.compiler.release>
+          </properties>
+          <activation>
+            <activeByDefault>true</activeByDefault>
+            <jdk>[9,)</jdk>
+          </activation>
+        </profile>
+        <!-- 
+          This profile is used with a GitHub Action.
+    
+          It sets builder.id, useful in a MANIFEST.
+    
+          It also sets up the repository to be
+          used for a deploy to GitHub Packages.
+        -->
+        <profile>
+          <id>github</id>
+          <properties>
+            <builder.id>${env.GITHUB_ACTOR}</builder.id>
+            <maven.compiler.release>8</maven.compiler.release>
+          </properties>
+          <activation>
+            <activeByDefault>false</activeByDefault>
+            <jdk>[9,)</jdk>
+          </activation>
+          <distributionManagement>
+            <repository>
+              <id>github</id>
+              <name>GitHub melahn Apache Maven Packages</name>
+              <url>https://maven.pkg.github.com/melahn/java-trace-visualizer</url>
+            </repository>
+          </distributionManagement>
+        </profile>
+        <!-- 
+          This profile is used with a GitHub Action.
+    
+          It sets builder.id, useful in a MANIFEST.
+    
+          It also sets up the repository to be
+          used for a deploy to the Maven Central
+          Repository.
+        -->
+        <profile>
+          <id>ossrh</id>
+          <properties>
+            <builder.id>${env.GITHUB_ACTOR}</builder.id>
+            <maven.compiler.release>8</maven.compiler.release>
+          </properties>
+          <activation>
+            <activeByDefault>false</activeByDefault>
+            <jdk>[9,)</jdk>
+          </activation>
+          <distributionManagement>
+            <repository>
+              <id>ossrh</id>
+              <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            </repository>
+          </distributionManagement>
+        </profile>
+      </profiles>
     <reporting>
         <plugins>
             <plugin>
@@ -58,21 +137,6 @@
             </plugin>
         </plugins>
     </reporting>
-    <profiles>
-        <!-- 
-            This profile assures that the compiler does not include any api calls that require java 9 
-            or later. 
-        -->
-        <profile>
-            <id>java-8</id>
-            <activation>
-              <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-              <maven.compiler.release>8</maven.compiler.release>
-            </properties>
-        </profile>
-    </profiles>
     <build>
         <resources>
             <resource>
