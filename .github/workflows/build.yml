@@ -55,7 +55,7 @@ jobs:
       # Copy the jars and signature files 
       - name: Package Jars and Signatures
         run: |
-          mkdir jars && cp target/archive-extract*.jar jars 
+          mkdir jars && cp target/java-trace-visualizer*.jar jars 
           cp target/*.asc jars 
       # Upload the jars and signature files 
       - uses: actions/upload-artifact@v2
