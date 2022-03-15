@@ -146,14 +146,6 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
-                        <configuration>
-                            <gpgArguments>
-                              <gpgArgument>--pinentry-mode</gpgArgument>
-                              <gpgArgument>loopback</gpgArgument>
-                            </gpgArguments>
-                            <!-- skip until ready to publish to maven central -->
-                            <skip>true</skip>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
