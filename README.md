@@ -169,3 +169,21 @@ salt
 center footer Generated on 2021/10/28 15:20:29 by com.melahn.util.java.trace.TraceVisualizerPlantUMLPrinter(https://github.com/melahn/java-trace-visualizer)
 @enduml
 ```
+
+## Build and CI/CD Notes
+
+The artifact is published to both the Maven Central Repository and as a GitHub Package using the [Deploy GitHub Workflow](https://github.com/melahn/java-trace-visualizer/blob/main/.github/workflows/deploy.yml).  **NOTE**: This step occurs after the first release is created.
+
+The artifact is built automatically whenever code is pushed or pulled, using the [Build GitHub Workflow](https://github.com/melahn/java-trace-visualizer/blob/main/.github/workflows/build.yml).
+
+The artifact can also be built locally using the default maven build profile. This has been tested with Maven 3.8.3 though other versions >= 3 should also work.  
+
+You will see a warning
+
+```text
+     target/classes (Is a directory)
+```
+
+when the shaded jar is built. This warning is due to a long-standing issue where the shade plugin checks if a classpath element is a jar, and if it is not, swallows useful error information, instead printing out a meaningless warning '(Is a directory)'.  See <https://issues.apache.org/jira/browse/MSHADE-376>
+
+See <https://github.com/melahn/maven-shade-plugin> if you want to install your own version of the plugin, with a fix.
