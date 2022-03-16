@@ -30,7 +30,7 @@ jobs:
           fetch-depth: 0  
       # Install Graphviz so class diagrams can be generated
       - name: Install graphviz
-        run: apt-get install graphviz
+        run: sudo apt-get install graphviz
       # Setup Java 11 with a settings.xml file setup for signatures
       # Note: maven caching is done here
       - name: Set up JDK 11
