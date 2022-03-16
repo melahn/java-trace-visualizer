@@ -38,6 +38,7 @@
     </repository>
   </distributionManagement>
   <properties>
+    <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sonar.projectKey>java-trace-visualizer</sonar.projectKey>
     <sonar.organization>melahn</sonar.organization>
@@ -45,14 +46,28 @@
     <sonar.log.level>INFO</sonar.log.level>
     <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
   <profiles>
     <!-- 
-        All profiles assure that the compiler does not include any api calls that require java 9 
-        or later. 
-    -->
-    <!-- 
-        This default profile is used when building outside of 
-        GitHub actions, such as on the command line.
+        This profile is used when building outside of 
+        GitHub actions, such as on the command line, using Java 9
+        or later.  The specification of <maven.compiler.release> 
+        assures that the compiler does not include any api calls that 
+        require java 9 or later (so it will run on Java 8).
 
         It sets builder.id, useful in a manifest.
 
@@ -61,14 +76,40 @@
         is defined.
     -->
     <profile>
-      <id>local</id>
+      <id>local-java9+</id>
       <properties>
         <builder.id>${user.name}</builder.id>
         <maven.compiler.release>8</maven.compiler.release>
       </properties>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
         <jdk>[9,)</jdk>
+      </activation>
+    </profile>
+        <!-- 
+        This profile is used when building outside of 
+        GitHub actions, such as on the command line, using Java 8
+        The specification of <maven.compiler.source> and
+        <maven.compiler.target> assures that the compiler does not 
+        include any api calls that require java 9 or later 
+        (so it will run on Java 8). 
+
+        It sets builder.id, useful in a manifest.
+
+        Deployment should only be done using GitHub 
+        CI/CD so no distributionManagement section
+        is defined.
+    -->
+    <profile>
+      <id>local-java8</id>
+      <properties>
+        <builder.id>${user.name}</builder.id>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+      </properties>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <jdk>1.8</jdk>
       </activation>
     </profile>
     <!-- 
@@ -87,7 +128,6 @@
       </properties>
       <activation>
         <activeByDefault>false</activeByDefault>
-        <jdk>[9,)</jdk>
       </activation>
       <distributionManagement>
         <repository>
@@ -114,7 +154,6 @@
       </properties>
       <activation>
         <activeByDefault>false</activeByDefault>
-        <jdk>[9,)</jdk>
       </activation>
       <distributionManagement>
         <repository>
@@ -124,21 +163,6 @@
       </distributionManagement>
     </profile>
   </profiles>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
-      </plugin>
-    </plugins>
-  </reporting>
   <build>
     <resources>
       <resource>
@@ -304,6 +328,18 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <!--
+                  filter out unneeded class and META-INF globally
+              -->
+              <filter>
+                <artifact>*:*</artifact>
+                <excludes>
+                  <exclude>module-info.class</exclude>
+                  <exclude>META-INF/*.SF</exclude>
+                  <exclude>META-INF/*.DSA</exclude>
+                  <exclude>META-INF/*.RSA</exclude>
+                </excludes>
+              </filter>
               <filters>
                 <!--
                     filter out the resources.properties because it is 
@@ -405,8 +441,8 @@
         </configuration>
       </plugin>
       <!-- 
-          Show which profile is in use to make sure the java-8 one above is 
-          picked up
+          Show which profile is in use to confirm the right one is being 
+          activated
       -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -416,7 +452,7 @@
           <execution>
             <?m2e execute onConfiguration?>
             <id>show-profiles</id>
-            <phase>compile</phase>
+            <phase>verify</phase>
             <goals>
               <goal>active-profiles</goal>
             </goals>
