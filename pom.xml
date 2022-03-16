@@ -52,7 +52,7 @@
           This default profile is used when building outside of 
           GitHub actions, such as on the command line.
     
-          It sets builder.id and build.timestamp, useful in a manifest.
+          It sets builder.id, useful in a manifest.
     
           Deployment should only be done using GitHub 
           CI/CD so no distributionManagement section
@@ -258,34 +258,6 @@
                 <version>3.0.0-M5</version>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>1.4</version>
-                <executions>
-                    <execution>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>create</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <doCheck>false</doCheck>
-                    <!-- 
-                        Using doUpdate = true will fail if the repo does not have a 'master' branch such
-                        as will occur after the github change.  
-                        See https://github.blog/changelog/2020-10-01-the-default-branch-for-newly-created-repositories-is-now-main/
-
-                        This is because the plugin uses the following to generate a git log command that is still using 'master'
-                        /bin/sh -c cd '/Users/melahn/development/visualstudio/java-trace-visualizer' && 'git' 'log' '-n1' '\-\-date-order' 'master'
-                    -->
-                    <doUpdate>false</doUpdate>
-                    <useLastCommittedRevision>true</useLastCommittedRevision>
-                    <scmConnectionUrl>scm:git:https://github.com/melahn/java-trace-visualizer.git</scmConnectionUrl>
-                    <shortRevisionLength>10</shortRevisionLength>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
@@ -375,8 +347,9 @@
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <manifestEntries>
                                 <Main-Class>com.melahn.util.java.trace.TraceVisualizer</Main-Class>
-                                <Build-Number>${buildNumber}</Build-Number>
                                 <Multi-Release>true</Multi-Release>
+                                <Build-Timestamp>${maven.build.timestamp}</Build-Timestamp>
+                                <Builder-Id>${builder.id}</Builder-Id>
                                 <url>${url}</url>
                             </manifestEntries>
                         </transformer>
