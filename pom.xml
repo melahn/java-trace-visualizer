@@ -457,36 +457,6 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <nonFilteredFileExtensions>
-                <nonFilteredFileExtension>jar</nonFilteredFileExtension>
-              </nonFilteredFileExtensions>
-              <outputDirectory>${basedir}/resource/jar</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/target</directory>
-                  <includes>
-                    <include>${project.artifactId}-${project.version}.jar</include>
-                    <include>${project.artifactId}-${project.version}-javadoc.jar</include>
-                    <include>${project.artifactId}-${project.version}-sources.jar</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
         <version>0.8.7</version>
