@@ -43,12 +43,12 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_JAR_KEY }} 
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       # Cache Sonar packages
-      #- name: Cache SonarCloud packages
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: ~/.sonar/cache
-      #    key: ${{ runner.os }}-sonar
-      #    restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
       # Run the Verify Phase using the github profile
       - name: Verify
         run: mvn -B -Dgpg.passphrase=${{ secrets.GPG_JAR_PASSWORD }} verify -P github
