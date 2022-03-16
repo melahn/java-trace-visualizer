@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Build Status](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml/badge.svg)](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml)
 [![Deploy](https://github.com/melahn/java-trace-visualizer/actions/workflows/deploy.yml/badge.svg)](https://github.com/melahn/java-trace-visualizer/actions/workflows/deploy.yml)
-[![Sonar Cloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=melahn_java-trace-visualizer&metric=alert_status)](https://sonarcloud.io/dashboard?id=melahn_java-trace-visualizer)
+[![Sonar Cloud Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=java-trace-visualizer&metric=alert_status)](https://sonarcloud.io/dashboard?id=java-trace-visualizer)
 
 ## Overview
 
