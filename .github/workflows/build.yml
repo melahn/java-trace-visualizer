@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     # Permissions are needed to read the artifacts and write the package
     permissions: 
-      contents: read
+      contents: write
       packages: write 
     steps:
       # Checkout (using V2)
