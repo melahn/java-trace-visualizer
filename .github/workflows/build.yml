@@ -55,6 +55,10 @@ jobs:
         env: 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_JAR_PASSWORD }}
+      # Update the generated documentation
+        run: | 
+          git add doc/generated
+          git push
       # Copy the jars and signature files 
       - name: Package Jars and Signatures
         run: |
