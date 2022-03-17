@@ -56,6 +56,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_JAR_PASSWORD }}
       # Update the generated documentation
+      - name: Generate Documentation
         run: | 
           git add doc/generated
           git push
