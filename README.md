@@ -30,7 +30,7 @@ The actual printing is done by two subclasses *TraceVisualizerTextPrinter* and *
 
 The generated statistics include just the method name and the number of times the method was called, as a csv file.
 
-All the classes are packaged in a shaded jar that contains all the dependencies needed. The jar is a snapshot version for now. Before I publish the artifact to a central repository, I will create Version 1.0.0.
+All the classes are packaged in a shaded jar that contains all the dependencies needed.
 
 At the moment, the generated visualization does not take into account multiple Java threads, though that information is present in the jdb trace file. The project includes some stub code that will be expanded in a future version to at least allow the user to select which thread is of interest. Also, in a future version, I will add support for dynamic tree views using JavaScript.
 
@@ -45,7 +45,7 @@ The code has complete test coverage as measured by [Sonar Cloud](https://sonarcl
 ### Command Line Syntax
 
 ``` java
-java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar
+java -jar java-trace-visualizer-1.0.0.jar
 
 Flags:
   -i  <filename>  The name of the input trace file 
@@ -78,13 +78,13 @@ Flags:
 ##### Generating a Trace Visualization as an Ascii Text File
 
 ``` java
-java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.txt 
+java -jar java-trace-visualizer-1.0.0.jar -i foo.jdb.out -o foo.txt 
 ```
 
 ##### Generating a Trace Visualization as a PlantUML File with an Accompanying Image File
 
 ``` java
-java -jar java-trace-visualizer-1.0.0-SNAPSHOT.jar -i foo.jdb.out -o foo.puml -g 
+java -jar java-trace-visualizer-1.0.0.jar -i foo.jdb.out -o foo.puml -g 
 ```
 
 #### Example Output
