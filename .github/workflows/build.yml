@@ -62,7 +62,7 @@ jobs:
           git commit -m "Update Documentation as part of GitHub action"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Copy the jars and signature files 
       - name: Package Jars and Signatures
         run: |
