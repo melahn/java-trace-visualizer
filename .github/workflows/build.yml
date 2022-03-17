@@ -58,14 +58,14 @@ jobs:
       # Update the generated documentation
       - name: Generate Documentation
         run: | 
-          if [ `git status --porcelain` ] then
-            git config --global user.email "melahn@github"
-            git config --global user.name "GitHub Action (build.yml)"
-            git add doc/generated/class-diagram.png
-            git commit -m "Update Documentation as part of GitHub action"
-            git push
+          if [[ `git status --porcelain` ]]; then
+              git config --global user.email "melahn@github"
+              git config --global user.name "GitHub Action (build.yml)"
+              git add doc/generated/class-diagram.png
+              git commit -m "Update Documentation as part of GitHub action"
+              git push
           else
-            echo no git changes
+              echo no git changes found
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
