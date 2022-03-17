@@ -58,7 +58,7 @@ jobs:
       # Update the generated documentation
       - name: Generate Documentation
         run: | 
-          git add doc/generated
+          git add doc/generated/class-diagram.png
           git push
       # Copy the jars and signature files 
       - name: Package Jars and Signatures
