@@ -173,18 +173,26 @@ center footer Generated on 2021/10/28 15:20:29 by com.melahn.util.java.trace.Tra
 
 ## Build and CI/CD Notes
 
-The artifact is published to both the Maven Central Repository and as a GitHub Package using the [Deploy GitHub Workflow](https://github.com/melahn/java-trace-visualizer/blob/main/.github/workflows/deploy.yml).  **NOTE**: This step occurs after the first release is created.
+### Build Notes
 
 The artifact is built automatically whenever code is pushed or pulled, using the [Build GitHub Workflow](https://github.com/melahn/java-trace-visualizer/blob/main/.github/workflows/build.yml).
 
 The artifact can also be built locally using the default maven build profile. This has been tested with Maven 3.8.3 though other versions >= 3 should also work.  
 
-You will see a warning
+### Deploy Notes
+
+The artifact is published to both the Maven Central Repository and as a GitHub Package using the [Deploy GitHub Workflow](https://github.com/melahn/java-trace-visualizer/blob/main/.github/workflows/deploy.yml).  **NOTE**: This step occurs after the first release is created.
+
+### Class Diagram Notes
+
+The [class diagram image file](./doc/generated/class-diagram.png) is generated from the [PUML source file](src/doc/class-diagram.puml) during the build, whether that happens locally or in the [GitHub workflow](.github/workflows/build.yml). The GitHub workflow automatically commits that image file to make sure the source and image are always in sync. Thus, there is no need for you to commit the image file yourself. If fact, if you try, you may need to resolve a git merge conflict later.
+
+### Warnings
+
+When the shaded jar is built by the maven-shade-plugin there is a warning produced like this...
 
 ```text
      target/classes (Is a directory)
 ```
 
-when the shaded jar is built. This warning is due to a long-standing issue where the shade plugin checks if a classpath element is a jar, and if it is not, swallows useful error information, instead printing out a meaningless warning '(Is a directory)'.  See <https://issues.apache.org/jira/browse/MSHADE-376>
-
-See <https://github.com/melahn/maven-shade-plugin> if you want to install your own version of the plugin, with a fix.
+This warning is due to a long-standing issue where the shade plugin checks if a classpath element is a jar, and if it is not, swallows useful error information.  It instead prints out this meaningless warning.  See <https://issues.apache.org/jira/browse/MSHADE-376> for more details. See <https://github.com/melahn/maven-shade-plugin> if you want to install your own version of the plugin, with a fix that eliminates this warning.
