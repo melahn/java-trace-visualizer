@@ -63,8 +63,9 @@ jobs:
             git config --global user.name "GitHub Action (build.yml)"
             git add doc/generated/class-diagram.png
             git commit -m "Update Documentation as part of GitHub action"
-          git push
-            else
+            git push
+          else
+            # do nothing
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
