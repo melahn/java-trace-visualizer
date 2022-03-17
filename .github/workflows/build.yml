@@ -58,11 +58,14 @@ jobs:
       # Update the generated documentation
       - name: Generate Documentation
         run: | 
-          git config --global user.email "melahn@github"
-          git config --global user.name "GitHub Action (build.yml)"
-          git add doc/generated/class-diagram.png
-          git commit -m "Update Documentation as part of GitHub action"
+          if [[ `git status --porcelain` ]]; then
+            git config --global user.email "melahn@github"
+            git config --global user.name "GitHub Action (build.yml)"
+            git add doc/generated/class-diagram.png
+            git commit -m "Update Documentation as part of GitHub action"
           git push
+            else
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Copy the jars and signature files 
