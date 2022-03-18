@@ -1,6 +1,6 @@
 # java-trace-visualizer
 
-![version](https://img.shields.io/badge/version-1.0.0%0ASNAPSHOT-orange)
+![version](https://img.shields.io/badge/version-1.0.0%0AIn%0AProgress-orange)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Build Status](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml/badge.svg)](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml)
 [![Deploy](https://github.com/melahn/java-trace-visualizer/actions/workflows/deploy.yml/badge.svg)](https://github.com/melahn/java-trace-visualizer/actions/workflows/deploy.yml)
