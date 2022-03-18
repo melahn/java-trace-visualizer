@@ -13,9 +13,9 @@ jobs:
   publish:
     name: Publish 
     runs-on: ubuntu-latest
-    # Permissions are needed to read the artifacts and write the package
+    # Permissions are needed to write updated artifacts and write the package
     permissions: 
-      contents: read
+      contents: write
       packages: write 
     steps:
       # Checkout (using V2)
