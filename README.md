@@ -97,7 +97,7 @@ export CLASSPATH=.
 jdb com.melahn.util.java.trace.TestTraceApp > example-single-thread-trace-file.jdb.out.txt 
 ```
 
-... and then entering the following jdb commands.  Note that you cannot see the jdb cursor or the jdb output since it is being redirected, so cutting and pasing the commands is a good approach.
+... and then entering the following jdb commands.  Note that you cannot see the jdb cursor or the jdb output since it is being redirected, so cutting and pasting the commands is a good approach.
 
 ``` jdb
 stop in com.melahn.util.java.trace.TestTraceApp.main
