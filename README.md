@@ -1,6 +1,9 @@
 # java-trace-visualizer
 
-![version](https://img.shields.io/badge/version-1.0.0%0AIn%0AProgress-orange)
+![GitHub last commit](https://img.shields.io/github/last-commit/melahn/java-trace-visualizer)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/melahn/java-trace-visualizer)
+![GitHub Release Date](https://img.shields.io/github/release-date/melahn/java-trace-visualizer)
+![Maven Central](https://img.shields.io/maven-central/v/com.melahn/java-trace-visualizer)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![GitHub Build Status](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml/badge.svg)](https://github.com/melahn/java-trace-visualizer/actions/workflows/build.yml)
 [![Deploy](https://github.com/melahn/java-trace-visualizer/actions/workflows/deploy.yml/badge.svg)](https://github.com/melahn/java-trace-visualizer/actions/workflows/deploy.yml)
@@ -12,7 +15,7 @@ A  project to make jdb trace output easier to understand.
 
 ## Dependency Info
 
-Available from the [Maven Central Repository](https://search.maven.org/search?q=melahn) and from [GitHub Packages](https://github.com/melahn/archive-extract/packages)
+Available from the [Maven Central Repository](https://search.maven.org/search?q=melahn) and from [GitHub Packages](https://github.com/melahn/java-trace-visualizer/packages)
 
 ```xml
 <dependency>
