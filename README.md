@@ -10,6 +10,18 @@
 
 A  project to make jdb trace output easier to understand.
 
+## Dependency Info
+
+Available from the [Maven Central Repository](https://search.maven.org/search?q=melahn) and from [GitHub Packages](https://github.com/melahn/archive-extract/packages)
+
+```xml
+<dependency>
+  <groupId>com.melahn</groupId>
+  <artifactId>java-trace-visualizer</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
 ## Prerequisites
 
 Java 8 or later.  
